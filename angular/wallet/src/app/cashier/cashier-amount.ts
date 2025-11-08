@@ -1,5 +1,5 @@
-import { Component, signal, inject } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, signal, inject, OnInit } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ChangeDetectionStrategy } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
@@ -11,10 +11,20 @@ import { DecimalPipe } from '@angular/common';
   styleUrl: './cashier-amount.css',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CashierAmountComponent {
+export class CashierAmountComponent implements OnInit {
   private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
 
   protected readonly displayAmount = signal<string>('0.00');
+
+  ngOnInit(): void {
+    // Read amount from query parameter if provided
+    const amountParam = this.route.snapshot.queryParamMap.get('amount');
+    if (amountParam) {
+      this.displayAmount.set(amountParam);
+      this.amountForm.patchValue({ amount: amountParam });
+    }
+  }
 
   protected isValidAmount(): boolean {
     const amount = parseFloat(this.displayAmount());
