@@ -101,6 +101,6 @@ export class CustomerPaymentComponent implements OnInit {
   }
 
   protected cancelPayment(): void {
-    this.router.navigate(['/customer/login']);
+    this.router.navigate(['/customer/payment']);
   }
 }

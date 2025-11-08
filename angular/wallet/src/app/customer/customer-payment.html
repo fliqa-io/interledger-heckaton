@@ -13,8 +13,8 @@
       <div class="amount-section">
         <div class="amount-label">Amount to Pay</div>
         <div class="amount-display">
-          <span class="currency">$</span>
           <span class="amount">{{ amount() }}</span>
+          <span class="currency">EUR</span>
         </div>
       </div>
 
@@ -48,11 +48,11 @@
         </div>
         <div class="detail-row">
           <span class="detail-label">Transaction Fee</span>
-          <span class="detail-value">$0.00</span>
+          <span class="detail-value">0.00 EUR</span>
         </div>
         <div class="detail-row total">
           <span class="detail-label">Total</span>
-          <span class="detail-value">${{ amount() }}</span>
+          <span class="detail-value">{{ amount() }} EUR</span>
         </div>
       </div>
 
