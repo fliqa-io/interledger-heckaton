@@ -23,6 +23,7 @@ public class PaymentService {
     @Transactional
     public Payment create(@NotNull CreatePaymentRequest request) {
         var payment = new Payment();
+        payment.setCashier(request.getEmail());
         payment.setId(UUID.randomUUID());
         payment.setAmount(request.getAmount());
         payment.setCurrency(request.getCurrency());

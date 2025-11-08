@@ -1,0 +1,9 @@
+### create payment
+POST http://localhost:8080/payment
+Content-Type: application/json
+
+{
+  "email": "test@test.com",
+  "amount": "10.00",
+  "currency": "USD"
+}
