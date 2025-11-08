@@ -21,8 +21,6 @@ export class CashierLoginComponent implements OnInit {
   protected readonly otpSent = signal(false);
   protected readonly email = signal<string>('');
 
-  private readonly API_BASE_URL = 'http://localhost:8080';
-
   // Reference to the OTP input field
   private readonly otpInput = viewChild<ElementRef<HTMLInputElement>>('otpInput');
 
@@ -81,9 +79,9 @@ export class CashierLoginComponent implements OnInit {
     this.email.set(email);
 
     // Verify OTP with backend
-    const url = `${this.API_BASE_URL}/cashier/login?email=${encodeURIComponent(email)}&otp=${encodeURIComponent(otp)}`;
+    const url = `/api/cashier/login?email=${encodeURIComponent(email)}&otp=${encodeURIComponent(otp)}`;
 
-    this.http.post(url, {}, { observe: 'response' }).subscribe({
+    this.http.get(url, { observe: 'response' }).subscribe({
       next: () => {
         this.isLoading.set(false);
         void this.router.navigate(['/cashier/transactions'], {
@@ -123,9 +121,9 @@ export class CashierLoginComponent implements OnInit {
     this.email.set(emailValue);
 
     // Call backend to send OTP
-    const url = `${this.API_BASE_URL}/cashier/login?email=${encodeURIComponent(emailValue)}`;
+    const url = `/api/cashier/login?email=${encodeURIComponent(emailValue)}`;
 
-    this.http.post(url, {}, { observe: 'response' }).subscribe({
+    this.http.get(url, { observe: 'response' }).subscribe({
       next: (response) => {
         this.isLoading.set(false);
         if (response.status === 204) {
@@ -159,9 +157,9 @@ export class CashierLoginComponent implements OnInit {
     const otpValue = this.otpForm.value.otp || '';
 
     // Call backend to verify OTP
-    const url = `${this.API_BASE_URL}/cashier/login?email=${encodeURIComponent(emailValue)}&otp=${encodeURIComponent(otpValue)}`;
+    const url = `/api/cashier/login?email=${encodeURIComponent(emailValue)}&otp=${encodeURIComponent(otpValue)}`;
 
-    this.http.post(url, {}, { observe: 'response' }).subscribe({
+    this.http.get(url, { observe: 'response' }).subscribe({
       next: () => {
         this.isLoading.set(false);
         void this.router.navigate(['/cashier/transactions'], {
