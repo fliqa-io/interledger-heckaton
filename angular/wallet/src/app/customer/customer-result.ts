@@ -15,7 +15,8 @@ export class CustomerResultComponent implements OnInit {
 
   protected readonly success = signal<boolean>(false);
   protected readonly amount = signal<string>('0.00');
-  protected readonly walletAddress = signal<string>('');
+  protected readonly walletServer = signal<string>('');
+  protected readonly walletName = signal<string>('');
   protected readonly transactionId = signal<string>('');
 
   ngOnInit(): void {
@@ -25,7 +26,8 @@ export class CustomerResultComponent implements OnInit {
     if (state?.['success'] !== undefined) {
       this.success.set(state['success']);
       this.amount.set(state['amount'] || '0.00');
-      this.walletAddress.set(state['walletAddress'] || '');
+      this.walletServer.set(state['walletServer'] || '');
+      this.walletName.set(state['walletName'] || '');
 
       if (state['success']) {
         // Generate mock transaction ID

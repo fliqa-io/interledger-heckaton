@@ -1,5 +1,6 @@
 .payment-container {
   min-height: 100vh;
+  min-width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -100,16 +101,38 @@
 .wallet-label {
   font-size: 12px;
   color: #718096;
-  margin-bottom: 6px;
+  margin-bottom: 10px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  font-weight: 600;
 }
 
-.wallet-address {
+.wallet-field {
+  margin-bottom: 8px;
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+}
+
+.wallet-field:last-child {
+  margin-bottom: 0;
+}
+
+.field-label {
+  font-size: 12px;
+  color: #a0aec0;
+  font-weight: 600;
+  min-width: 60px;
+  flex-shrink: 0;
+}
+
+.wallet-server,
+.wallet-name {
   font-size: 13px;
   color: #2d3748;
   font-family: monospace;
   word-break: break-all;
+  flex: 1;
 }
 
 .payment-details {

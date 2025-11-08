@@ -13,7 +13,8 @@ import { DecimalPipe } from '@angular/common';
 export class CustomerPaymentComponent implements OnInit {
   private readonly router = inject(Router);
 
-  protected readonly walletAddress = signal<string>('');
+  protected readonly walletServer = signal<string>('');
+  protected readonly walletName = signal<string>('');
   protected readonly amount = signal<string>('0.00');
   protected readonly merchantId = signal<string>('FLIQA_WALLET');
   protected readonly isProcessing = signal(false);
@@ -22,8 +23,9 @@ export class CustomerPaymentComponent implements OnInit {
     const navigation = this.router.getCurrentNavigation();
     const state = navigation?.extras?.state || history.state;
 
-    if (state?.['walletAddress']) {
-      this.walletAddress.set(state['walletAddress']);
+    if (state?.['walletServer'] && state?.['walletName']) {
+      this.walletServer.set(state['walletServer']);
+      this.walletName.set(state['walletName']);
       // In real implementation, this would fetch payment details from QR code or deep link
       this.loadPaymentDetails();
     } else {
@@ -51,7 +53,8 @@ export class CustomerPaymentComponent implements OnInit {
         state: {
           success,
           amount: this.amount(),
-          walletAddress: this.walletAddress()
+          walletServer: this.walletServer(),
+          walletName: this.walletName()
         }
       });
     }, 2000);

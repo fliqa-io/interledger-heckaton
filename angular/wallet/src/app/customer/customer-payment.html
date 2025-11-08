@@ -20,7 +20,14 @@
 
       <div class="wallet-info">
         <div class="wallet-label">From Wallet</div>
-        <div class="wallet-address">{{ walletAddress() }}</div>
+        <div class="wallet-field">
+          <span class="field-label">Server:</span>
+          <span class="wallet-server">{{ walletServer() }}</span>
+        </div>
+        <div class="wallet-field">
+          <span class="field-label">Address:</span>
+          <span class="wallet-name">{{ walletName() }}</span>
+        </div>
       </div>
 
       <div class="payment-details">

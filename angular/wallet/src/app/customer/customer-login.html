@@ -1,46 +1,55 @@
 <div class="login-container">
-  <div class="login-card">
-    <h1>Customer Payment</h1>
-    <p class="subtitle">Enter your wallet address to proceed</p>
+    <div class="login-card">
+        <h1>Login</h1>
+        <p class="subtitle">Enter your wallet address to proceed</p>
 
-    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-      <div class="form-group">
-        <label for="walletAddress">Wallet Address</label>
-        <div class="input-group">
-          <input
-            id="walletAddress"
-            type="text"
-            formControlName="walletAddress"
-            placeholder="Enter your wallet address"
-            class="form-input"
-          />
-          <button
-            type="button"
-            class="paste-button"
-            (click)="pasteFromClipboard()"
-            title="Paste from clipboard"
-          >
-            📋
-          </button>
-        </div>
-        <small class="hint">Your Interledger wallet address</small>
-      </div>
-
-      @if (errorMessage()) {
-        <div class="error-message">{{ errorMessage() }}</div>
-      }
-
-      <button
-        type="submit"
-        class="submit-button"
-        [disabled]="isLoading()"
-      >
-        @if (isLoading()) {
-          <span>Connecting...</span>
-        } @else {
-          <span>Continue</span>
+        @if (errorMessage()) {
+            <div class="error-message">{{ errorMessage() }}</div>
         }
-      </button>
-    </form>
-  </div>
+
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+            <div class="form-group">
+                <label for="walletAddress">Wallet Address</label>
+                <div class="input-group">
+                    <input
+                            id="walletAddress"
+                            type="text"
+                            formControlName="walletAddress"
+                            placeholder="Enter your Open Payments wallet address"
+                            class="form-input"
+                    />
+                </div>
+                <small class="hint">Your Open payments wallet address</small>
+            </div>
+
+            @if (recentAddresses().length > 0) {
+                <div class="recent-addresses">
+                    <label class="recent-label">Recently used:</label>
+                    <div class="recent-list">
+                        @for (address of recentAddresses(); track address.fullAddress) {
+                            <button
+                                    type="button"
+                                    class="recent-address-button"
+                                    (click)="selectRecentAddress(address)"
+                            >
+                                <span class="recent-address-text">{{ address.fullAddress }}</span>
+                            </button>
+                        }
+                    </div>
+                </div>
+            }
+
+            <button
+                    type="submit"
+                    class="submit-button"
+                    [disabled]="isLoading()"
+            >
+                @if (isLoading()) {
+                    <span>Connecting...</span>
+                } @else {
+                    <span>Continue</span>
+                }
+            </button>
+        </form>
+    </div>
 </div>
