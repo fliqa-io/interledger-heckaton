@@ -56,7 +56,9 @@ export class CashierQRCodeComponent implements OnInit {
   }
 
   protected goBack(): void {
-    this.router.navigate(['/cashier/amount']);
+    this.router.navigate(['/cashier/amount'], {
+      queryParams: { amount: this.amount() }
+    });
   }
 
   protected newTransaction(): void {
