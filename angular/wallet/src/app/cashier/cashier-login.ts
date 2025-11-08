@@ -80,8 +80,10 @@ export class CashierLoginComponent implements OnInit {
     setTimeout(() => {
       this.isLoading.set(false);
       // In production, this would verify the OTP with the backend
-      // If valid, navigate to the cashier amount page
-      this.router.navigate(['/cashier/amount']);
+      // If valid, navigate to the cashier transactions page
+      this.router.navigate(['/cashier/transactions'], {
+        state: { email: email, name: email.split('@')[0] }
+      });
     }, 1000);
   }
 
@@ -137,7 +139,10 @@ export class CashierLoginComponent implements OnInit {
     setTimeout(() => {
       this.isLoading.set(false);
       // In production, this would verify the OTP
-      this.router.navigate(['/cashier/amount']);
+      const emailValue = this.email();
+      this.router.navigate(['/cashier/transactions'], {
+        state: { email: emailValue, name: emailValue.split('@')[0] }
+      });
     }, 1000);
   }
 
