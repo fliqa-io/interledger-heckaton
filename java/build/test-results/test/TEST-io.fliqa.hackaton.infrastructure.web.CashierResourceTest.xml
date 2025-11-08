@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="io.fliqa.hackaton.infrastructure.web.CashierResourceTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2025-11-08T20:20:45.466Z" hostname="metalik" time="0.639">
+  <properties/>
+  <testcase name="login()" classname="io.fliqa.hackaton.infrastructure.web.CashierResourceTest" time="0.639"/>
+  <system-out><![CDATA[2025-11-08 21:20:44,611 INFO  [org.hib.jpa.int.uti.LogHelper] (Test worker) HHH000204: Processing PersistenceUnitInfo [name: <default>]
+2025-11-08 21:20:44,678 INFO  [org.hib.Version] (Test worker) HHH000412: Hibernate ORM core version 7.1.6.Final
+2025-11-08 21:20:44,778 INFO  [org.hib.orm.con.pooling] (Test worker) HHH10001005: Database info:
+	Database JDBC URL [undefined/unknown]
+	Database driver: undefined/unknown
+	Database dialect: PostgreSQLDialect
+	Database version: 13.0
+	Default catalog/schema: unknown/unknown
+	Autocommit mode: undefined/unknown
+	Isolation level: <unknown>
+	JDBC fetch size: undefined/unknown
+	Pool: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-11-08 21:20:44,841 INFO  [org.hib.val.int.uti.Version] (Test worker) HV000001: Hibernate Validator 9.0.1.Final
+2025-11-08 21:20:45,459 INFO  [io.quarkus] (Test worker) interledger-hackaton 1.0.0-SNAPSHOT on JVM (powered by Quarkus 3.29.1) started in 2.564s. Listening on: http://localhost:8081
+2025-11-08 21:20:45,459 INFO  [io.quarkus] (Test worker) Profile test activated. 
+2025-11-08 21:20:45,459 INFO  [io.quarkus] (Test worker) Installed features: [agroal, cdi, compose, hibernate-orm, hibernate-orm-panache, hibernate-validator, jdbc-postgresql, narayana-jta, rest, rest-jackson, smallrye-context-propagation, vertx]
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

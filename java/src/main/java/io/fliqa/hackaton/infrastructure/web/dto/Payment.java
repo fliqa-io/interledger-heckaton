@@ -13,13 +13,16 @@ import java.util.UUID;
 @Data
 @Entity
 public class Payment implements Serializable {
+
     @NotNull
     @Id
     @Column(name = "id")
     UUID id;
+
     @NotNull
     @Column(name = "amount")
     BigDecimal amount;
+
     @NotNull
     @Column(name = "currency")
     String currency;

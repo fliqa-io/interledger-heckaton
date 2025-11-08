@@ -47,7 +47,7 @@ public class PaymentResource {
     @GET
     @Path("/{id}")
     @Produces("image/png")
-    public Payment getPaymentAsXml(@NotNull @PathParam("id") UUID id) {
+    public Payment getPaymentAsImage(@NotNull @PathParam("id") UUID id) {
         return paymentService.getById(id);
     }
 }
