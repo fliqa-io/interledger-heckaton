@@ -30,7 +30,7 @@ dependencies {
     annotationProcessor("org.projectlombok:lombok:1.18.42")
 }
 
-group = "org.acme"
+group = "io.fliqa"
 version = "1.0.0-SNAPSHOT"
 
 java {
