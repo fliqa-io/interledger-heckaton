@@ -1,0 +1,6 @@
+GET http://localhost:8080/cashier/login?email=test@test.com
+Content-Type: */*
+
+###
+GET http://localhost:8080/cashier/login?email=test@test.com&otp=0467
+Content-Type: */*

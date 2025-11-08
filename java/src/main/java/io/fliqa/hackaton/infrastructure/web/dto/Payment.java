@@ -9,6 +9,7 @@ import lombok.Data;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.util.UUID;
 
 @Data
@@ -28,4 +29,6 @@ public class Payment implements Serializable {
     @NotNull
     @Column(name = "currency")
     String currency;
+
+    Instant created;
 }

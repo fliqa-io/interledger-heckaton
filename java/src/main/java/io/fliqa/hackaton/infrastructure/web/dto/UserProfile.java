@@ -1,5 +1,7 @@
 package io.fliqa.hackaton.infrastructure.web.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.annotation.Nullable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -19,4 +21,9 @@ public class UserProfile {
 
     @Column(name = "payment_pointer")
     String paymentPointer;
+
+    @Nullable
+    @Column(name="otp")
+    @JsonIgnore
+    String otp;
 }

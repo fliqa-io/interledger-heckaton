@@ -8,6 +8,7 @@ import jakarta.transaction.Transactional;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.NotFoundException;
 
+import java.time.Instant;
 import java.util.UUID;
 
 @ApplicationScoped
@@ -25,6 +26,7 @@ public class PaymentService {
         payment.setId(UUID.randomUUID());
         payment.setAmount(request.getAmount());
         payment.setCurrency(request.getCurrency());
+        payment.setCreated(Instant.now());
 
         repository.persist(payment);
 

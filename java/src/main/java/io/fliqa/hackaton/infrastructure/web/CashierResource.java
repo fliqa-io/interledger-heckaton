@@ -27,8 +27,13 @@ public class CashierResource {
     @Path("/login")
     public UserProfile login(
             @QueryParam("email") @NotNull @NotEmpty @Email String email,
-            @QueryParam("otp") @Pattern(regexp = "[\\d]{4}") @NotNull String otp) {
+            @QueryParam("otp") @Pattern(regexp = "[\\d]{4}") String otp) {
 
-        return service.getByEmail(email);
+        if(otp == null || otp.isEmpty()) {
+            service.loginCashier(email);
+            return null;
+        }
+
+        return service.validateOtp(email, otp);
     }
 }
