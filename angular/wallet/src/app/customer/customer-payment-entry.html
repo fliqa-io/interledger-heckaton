@@ -1,8 +1,31 @@
 <div class="payment-container">
   <div class="payment-card">
     <div class="header">
-      <h1>Payment</h1>
+      <h1>Enter Payment Details</h1>
     </div>
 
+    <div class="content">
+      <div class="form-section">
+        <label for="paymentId" class="form-label">Payment ID</label>
+        <input
+          id="paymentId"
+          type="text"
+          class="form-input"
+          placeholder="Enter payment ID"
+          [value]="paymentId()"
+          (input)="paymentId.set($any($event.target).value)"
+        />
+      </div>
+
+      <div class="actions">
+        <button
+          class="confirm-button"
+          (click)="navigateToPayment()"
+          [disabled]="!paymentId() || !paymentId().trim()"
+        >
+          Continue to Payment
+        </button>
+      </div>
+    </div>
   </div>
 </div>
