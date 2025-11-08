@@ -2,6 +2,7 @@ import { Component, signal, inject, effect, viewChild, ElementRef, OnInit } from
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ChangeDetectionStrategy } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-cashier-login',
@@ -13,11 +14,14 @@ import { ChangeDetectionStrategy } from '@angular/core';
 export class CashierLoginComponent implements OnInit {
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
+  private readonly http = inject(HttpClient);
 
   protected readonly errorMessage = signal<string>('');
   protected readonly isLoading = signal(false);
   protected readonly otpSent = signal(false);
   protected readonly email = signal<string>('');
+
+  private readonly API_BASE_URL = 'http://localhost:8080';
 
   // Reference to the OTP input field
   private readonly otpInput = viewChild<ElementRef<HTMLInputElement>>('otpInput');
@@ -76,15 +80,29 @@ export class CashierLoginComponent implements OnInit {
     this.isLoading.set(true);
     this.email.set(email);
 
-    // TODO: Verify OTP with backend
-    setTimeout(() => {
-      this.isLoading.set(false);
-      // In production, this would verify the OTP with the backend
-      // If valid, navigate to the cashier transactions page
-      this.router.navigate(['/cashier/transactions'], {
-        state: { email: email, name: email.split('@')[0] }
-      });
-    }, 1000);
+    // Verify OTP with backend
+    const url = `${this.API_BASE_URL}/cashier/login?email=${encodeURIComponent(email)}&otp=${encodeURIComponent(otp)}`;
+
+    this.http.post(url, {}, { observe: 'response' }).subscribe({
+      next: () => {
+        this.isLoading.set(false);
+        void this.router.navigate(['/cashier/transactions'], {
+          state: { email: email, name: email.split('@')[0] }
+        });
+      },
+      error: (error) => {
+        this.isLoading.set(false);
+        if (error.status === 404) {
+          this.errorMessage.set('Email address not found. Please try again.');
+        } else if (error.status === 401 || error.status === 403) {
+          this.errorMessage.set('Invalid or expired login link. Please request a new one.');
+        } else if (error.status >= 400 && error.status < 500) {
+          this.errorMessage.set(error.error?.message || 'Invalid login link. Please try again.');
+        } else {
+          this.errorMessage.set('Login failed. Please try again.');
+        }
+      }
+    });
   }
 
   private isValidEmail(email: string): boolean {
@@ -104,26 +122,28 @@ export class CashierLoginComponent implements OnInit {
     const emailValue = this.emailForm.value.email || '';
     this.email.set(emailValue);
 
-    // TODO: Send OTP to email via backend
-    setTimeout(() => {
-      this.isLoading.set(false);
-      this.otpSent.set(true);
+    // Call backend to send OTP
+    const url = `${this.API_BASE_URL}/cashier/login?email=${encodeURIComponent(emailValue)}`;
 
-      // Generate mock OTP for demo purposes
-      const mockOTP = Math.floor(1000 + Math.random() * 9000).toString();
-
-      // In production, this would actually send an email with:
-      // 1. The 4-digit OTP code
-      // 2. A clickable link that logs them in directly
-      const loginLink = `${window.location.origin}/cashier/login?email=${encodeURIComponent(emailValue)}&otp=${mockOTP}`;
-
-      console.log(`OTP Email would be sent to: ${emailValue}`);
-      console.log(`OTP Code: ${mockOTP}`);
-      console.log(`One-Click Login Link: ${loginLink}`);
-      console.log('\nEmail would contain:');
-      console.log('- Your PIN code: ' + mockOTP);
-      console.log('- Or click this link to login automatically: ' + loginLink);
-    }, 1000);
+    this.http.post(url, {}, { observe: 'response' }).subscribe({
+      next: (response) => {
+        this.isLoading.set(false);
+        if (response.status === 204) {
+          // OTP was generated successfully
+          this.otpSent.set(true);
+        }
+      },
+      error: (error) => {
+        this.isLoading.set(false);
+        if (error.status === 404) {
+          this.errorMessage.set('Email address not found. Please check and try again.');
+        } else if (error.status >= 400 && error.status < 500) {
+          this.errorMessage.set(error.error?.message || 'Invalid request. Please try again.');
+        } else {
+          this.errorMessage.set('Failed to send OTP. Please try again.');
+        }
+      }
+    });
   }
 
   protected verifyOTP(): void {
@@ -135,15 +155,32 @@ export class CashierLoginComponent implements OnInit {
     this.isLoading.set(true);
     this.errorMessage.set('');
 
-    // TODO: Verify OTP with backend
-    setTimeout(() => {
-      this.isLoading.set(false);
-      // In production, this would verify the OTP
-      const emailValue = this.email();
-      this.router.navigate(['/cashier/transactions'], {
-        state: { email: emailValue, name: emailValue.split('@')[0] }
-      });
-    }, 1000);
+    const emailValue = this.email();
+    const otpValue = this.otpForm.value.otp || '';
+
+    // Call backend to verify OTP
+    const url = `${this.API_BASE_URL}/cashier/login?email=${encodeURIComponent(emailValue)}&otp=${encodeURIComponent(otpValue)}`;
+
+    this.http.post(url, {}, { observe: 'response' }).subscribe({
+      next: () => {
+        this.isLoading.set(false);
+        void this.router.navigate(['/cashier/transactions'], {
+          state: { email: emailValue, name: emailValue.split('@')[0] }
+        });
+      },
+      error: (error) => {
+        this.isLoading.set(false);
+        if (error.status === 404) {
+          this.errorMessage.set('Email address not found. Please try again.');
+        } else if (error.status === 401 || error.status === 403) {
+          this.errorMessage.set('Invalid PIN code. Please try again.');
+        } else if (error.status >= 400 && error.status < 500) {
+          this.errorMessage.set(error.error?.message || 'Invalid request. Please try again.');
+        } else {
+          this.errorMessage.set('Login failed. Please try again.');
+        }
+      }
+    });
   }
 
   protected backToEmail(): void {
