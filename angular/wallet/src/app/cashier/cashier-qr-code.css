@@ -57,16 +57,22 @@ h1 {
 
 .amount-display {
   display: flex;
-  align-items: center;
   justify-content: center;
   gap: 10px;
-  margin-bottom: 40px;
+  align-items: flex-end;
+  background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+  border-radius: 1rem;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  border: 2px solid #e2e8f0;
 }
 
 .currency {
-  font-size: 36px;
-  color: #667eea;
+  font-size: 1.5rem;
   font-weight: 700;
+  color: #4a5568;
+  margin-left: 1rem;
+  padding-bottom: 0.3rem;
 }
 
 .amount {
