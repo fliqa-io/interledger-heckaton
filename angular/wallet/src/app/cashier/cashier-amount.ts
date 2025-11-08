@@ -16,6 +16,11 @@ export class CashierAmountComponent {
 
   protected readonly displayAmount = signal<string>('0.00');
 
+  protected isValidAmount(): boolean {
+    const amount = parseFloat(this.displayAmount());
+    return !isNaN(amount) && amount > 0;
+  }
+
   protected readonly amountForm = new FormGroup({
     amount: new FormControl('', [Validators.required, Validators.min(0.01)])
   });
@@ -60,7 +65,9 @@ export class CashierAmountComponent {
   }
 
   protected generateQRCode(): void {
-    if (this.amountForm.invalid || this.displayAmount() === '0.00') {
+    const amount = parseFloat(this.displayAmount());
+
+    if (this.amountForm.invalid || isNaN(amount) || amount <= 0) {
       return;
     }
 
