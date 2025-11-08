@@ -1,0 +1,160 @@
+.qr-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 20px;
+}
+
+.qr-card {
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  width: 100%;
+  max-width: 500px;
+  overflow: hidden;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.back-button,
+.logout-button {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.back-button:hover,
+.logout-button:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+}
+
+.content {
+  padding: 40px 30px;
+}
+
+h1 {
+  text-align: center;
+  color: #2d3748;
+  margin: 0 0 30px 0;
+  font-size: 28px;
+  font-weight: 600;
+}
+
+.amount-display {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 40px;
+}
+
+.currency {
+  font-size: 36px;
+  color: #667eea;
+  font-weight: 700;
+}
+
+.amount {
+  font-size: 48px;
+  font-weight: 700;
+  color: #2d3748;
+}
+
+.qr-code-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 30px;
+}
+
+.qr-placeholder {
+  width: 280px;
+  height: 280px;
+  padding: 20px;
+  background: white;
+  border: 2px solid #e2e8f0;
+  border-radius: 16px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.qr-placeholder svg {
+  width: 100%;
+  height: 100%;
+}
+
+.instructions {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.instructions p {
+  color: #718096;
+  font-size: 14px;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.actions {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+}
+
+.secondary-button {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 14px 32px;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px rgba(102, 126, 234, 0.3);
+}
+
+.secondary-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(102, 126, 234, 0.4);
+}
+
+.secondary-button:active {
+  transform: translateY(0);
+}
+
+@media (max-width: 600px) {
+  .content {
+    padding: 30px 20px;
+  }
+
+  h1 {
+    font-size: 24px;
+  }
+
+  .amount {
+    font-size: 36px;
+  }
+
+  .currency {
+    font-size: 28px;
+  }
+
+  .qr-placeholder {
+    width: 240px;
+    height: 240px;
+  }
+}

@@ -1,0 +1,46 @@
+<div class="login-container">
+  <div class="login-card">
+    <h1>Customer Payment</h1>
+    <p class="subtitle">Enter your wallet address to proceed</p>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="walletAddress">Wallet Address</label>
+        <div class="input-group">
+          <input
+            id="walletAddress"
+            type="text"
+            formControlName="walletAddress"
+            placeholder="Enter your wallet address"
+            class="form-input"
+          />
+          <button
+            type="button"
+            class="paste-button"
+            (click)="pasteFromClipboard()"
+            title="Paste from clipboard"
+          >
+            📋
+          </button>
+        </div>
+        <small class="hint">Your Interledger wallet address</small>
+      </div>
+
+      @if (errorMessage()) {
+        <div class="error-message">{{ errorMessage() }}</div>
+      }
+
+      <button
+        type="submit"
+        class="submit-button"
+        [disabled]="isLoading()"
+      >
+        @if (isLoading()) {
+          <span>Connecting...</span>
+        } @else {
+          <span>Continue</span>
+        }
+      </button>
+    </form>
+  </div>
+</div>

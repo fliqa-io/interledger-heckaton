@@ -1,0 +1,72 @@
+<div class="payment-container">
+  <div class="payment-card">
+    <div class="header">
+      <h1>Payment Details</h1>
+    </div>
+
+    <div class="content">
+      <div class="merchant-info">
+        <div class="merchant-label">Merchant</div>
+        <div class="merchant-name">{{ merchantId() }}</div>
+      </div>
+
+      <div class="amount-section">
+        <div class="amount-label">Amount to Pay</div>
+        <div class="amount-display">
+          <span class="currency">$</span>
+          <span class="amount">{{ amount() }}</span>
+        </div>
+      </div>
+
+      <div class="wallet-info">
+        <div class="wallet-label">From Wallet</div>
+        <div class="wallet-address">{{ walletAddress() }}</div>
+      </div>
+
+      <div class="payment-details">
+        <div class="detail-row">
+          <span class="detail-label">Payment Method</span>
+          <span class="detail-value">Interledger</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Transaction Fee</span>
+          <span class="detail-value">$0.00</span>
+        </div>
+        <div class="detail-row total">
+          <span class="detail-label">Total</span>
+          <span class="detail-value">${{ amount() }}</span>
+        </div>
+      </div>
+
+      @if (isProcessing()) {
+        <div class="processing-message">
+          <div class="spinner"></div>
+          <p>Processing payment...</p>
+        </div>
+      }
+
+      <div class="actions">
+        <button
+          type="button"
+          class="cancel-button"
+          (click)="cancelPayment()"
+          [disabled]="isProcessing()"
+        >
+          Cancel
+        </button>
+        <button
+          type="button"
+          class="confirm-button"
+          (click)="confirmPayment()"
+          [disabled]="isProcessing()"
+        >
+          @if (isProcessing()) {
+            <span>Processing...</span>
+          } @else {
+            <span>Confirm Payment</span>
+          }
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

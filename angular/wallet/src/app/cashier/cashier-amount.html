@@ -1,0 +1,43 @@
+<div class="amount-container">
+  <div class="amount-card">
+    <div class="header">
+      <h1>Enter Amount</h1>
+      <button type="button" class="logout-button" (click)="logout()">Logout</button>
+    </div>
+
+    <div class="display">
+      <div class="currency">$</div>
+      <div class="amount">{{ displayAmount() }}</div>
+    </div>
+
+    <div class="keypad">
+      <button type="button" class="key-button" (click)="appendDigit('7')">7</button>
+      <button type="button" class="key-button" (click)="appendDigit('8')">8</button>
+      <button type="button" class="key-button" (click)="appendDigit('9')">9</button>
+
+      <button type="button" class="key-button" (click)="appendDigit('4')">4</button>
+      <button type="button" class="key-button" (click)="appendDigit('5')">5</button>
+      <button type="button" class="key-button" (click)="appendDigit('6')">6</button>
+
+      <button type="button" class="key-button" (click)="appendDigit('1')">1</button>
+      <button type="button" class="key-button" (click)="appendDigit('2')">2</button>
+      <button type="button" class="key-button" (click)="appendDigit('3')">3</button>
+
+      <button type="button" class="key-button" (click)="appendDigit('.')">.</button>
+      <button type="button" class="key-button" (click)="appendDigit('0')">0</button>
+      <button type="button" class="key-button delete" (click)="deleteDigit()">⌫</button>
+    </div>
+
+    <div class="actions">
+      <button type="button" class="clear-button" (click)="clearAmount()">Clear</button>
+      <button
+        type="button"
+        class="generate-button"
+        (click)="generateQRCode()"
+        [disabled]="displayAmount() === '0.00'"
+      >
+        Generate QR Code
+      </button>
+    </div>
+  </div>
+</div>
