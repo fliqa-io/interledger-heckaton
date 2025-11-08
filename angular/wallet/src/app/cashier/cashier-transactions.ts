@@ -2,6 +2,7 @@ import { Component, signal, inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ChangeDetectionStrategy } from '@angular/core';
 import { DecimalPipe, DatePipe } from '@angular/common';
+import { CashierProfileService } from '../services/cashier-profile.service';
 
 interface Transaction {
   id: string;
@@ -20,22 +21,33 @@ interface Transaction {
 })
 export class CashierTransactionsComponent implements OnInit {
   private readonly router = inject(Router);
+  private readonly profileService = inject(CashierProfileService);
 
   protected readonly cashierEmail = signal<string>('');
   protected readonly cashierName = signal<string>('');
   protected readonly transactions = signal<Transaction[]>([]);
 
   ngOnInit(): void {
-    const navigation = this.router.getCurrentNavigation();
-    const state = navigation?.extras?.state || history.state;
+    // First, try to get profile from localStorage
+    const profile = this.profileService.getProfile();
 
-    if (state?.['email']) {
-      this.cashierEmail.set(state['email']);
-      this.cashierName.set(state['name'] || state['email']);
+    if (profile) {
+      this.cashierEmail.set(profile.email);
+      this.cashierName.set(profile.name);
       this.loadTransactions();
     } else {
-      // If no cashier info, redirect to login
-      this.router.navigate(['/cashier/login']);
+      // Fallback to navigation state (for backwards compatibility)
+      const navigation = this.router.getCurrentNavigation();
+      const state = navigation?.extras?.state || history.state;
+
+      if (state?.['email']) {
+        this.cashierEmail.set(state['email']);
+        this.cashierName.set(state['name'] || state['email']);
+        this.loadTransactions();
+      } else {
+        // If no cashier info, redirect to login
+        void this.router.navigate(['/cashier/login']);
+      }
     }
   }
 
@@ -94,7 +106,8 @@ export class CashierTransactionsComponent implements OnInit {
   }
 
   protected logout(): void {
-    this.router.navigate(['/cashier/login']);
+    this.profileService.clearProfile();
+    void this.router.navigate(['/cashier/login']);
   }
 
   protected getStatusClass(status: string): string {
