@@ -30,7 +30,7 @@ h1 {
   margin: 0;
 }
 
-.logout-button {
+.back-button {
   padding: 0.5rem 1rem;
   background: #f7fafc;
   color: #4a5568;
@@ -42,7 +42,7 @@ h1 {
   transition: all 0.2s;
 }
 
-.logout-button:hover {
+.back-button:hover {
   background: #edf2f7;
   border-color: #cbd5e0;
 }
