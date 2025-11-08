@@ -52,6 +52,10 @@ export class CashierAmountComponent implements OnInit {
       this.displayAmount.set(digit);
     } else if (current === '0.00' && digit === '.') {
       this.displayAmount.set('0.');
+    } else if (current === '0' && digit === '.') {
+      this.displayAmount.set('0.');
+    } else if (current === '0' && digit !== '.') {
+      this.displayAmount.set(digit);
     } else {
       const [whole, decimal] = current.split('.');
       if (decimal !== undefined && decimal.length >= 2) {
