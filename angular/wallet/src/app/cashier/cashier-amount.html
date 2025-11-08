@@ -34,7 +34,7 @@
         type="button"
         class="generate-button"
         (click)="generateQRCode()"
-        [disabled]="displayAmount() === '0.00'"
+        [disabled]="!isValidAmount()"
       >
         Generate QR Code
       </button>
