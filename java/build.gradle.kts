@@ -22,6 +22,7 @@ dependencies {
     implementation("io.quarkus:quarkus-arc")
     implementation("io.quarkus:quarkus-hibernate-orm")
     implementation("io.quarkus:quarkus-mailer")
+    implementation("io.quarkiverse.mailpit:quarkus-mailpit:1.7.0")
     implementation("org.projectlombok:lombok:1.18.42")
     implementation("com.google.zxing:javase:3.5.3")
 

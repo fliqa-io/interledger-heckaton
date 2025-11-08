@@ -58,7 +58,10 @@ public class CashierService {
 
     private void sendEmail(UserProfile user) {
         var contents = generateEmail(user);
-        mailer.send(Mail.withHtml(user.getEmail(), "Cashier Login", contents));
+        Mail loginEmail = Mail.withHtml(user.getEmail(), "Cashier Login", contents);
+        loginEmail.setFrom("info@fliqa.io");
+
+        mailer.send(loginEmail);
     }
 
     private String generateEmail(UserProfile user) {
