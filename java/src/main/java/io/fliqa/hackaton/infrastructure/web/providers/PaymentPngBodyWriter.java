@@ -10,15 +10,11 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.MultivaluedMap;
 import jakarta.ws.rs.ext.MessageBodyWriter;
 import jakarta.ws.rs.ext.Provider;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
 
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
-import java.util.Optional;
 
 @Provider
 @Produces({"image/png"})
@@ -38,8 +34,10 @@ public class PaymentPngBodyWriter implements MessageBodyWriter<Payment> {
             Annotation[] annotations,
             MediaType mediaType) {
 
-        return Payment.class.isAssignableFrom(aClass) &&
-               mediaType.isCompatible(MediaType.TEXT_PLAIN_TYPE);
+        boolean isImage = mediaType.getType().equals("image");
+        boolean isPng = mediaType.getSubtype().equals("png");
+
+        return Payment.class.isAssignableFrom(aClass) && isImage && isPng;
     }
 
     @Override
@@ -53,7 +51,7 @@ public class PaymentPngBodyWriter implements MessageBodyWriter<Payment> {
             OutputStream outputStream) throws IOException, WebApplicationException {
 
         var superimposedImage =
-                PaymentPngBodyWriter.class.getResourceAsStream("/superimposed.png");
+                PaymentPngBodyWriter.class.getResourceAsStream("/logotype.png");
 
         if (superimposedImage == null) {
             throw new InternalServerErrorException("Failed to load superimposed image");
