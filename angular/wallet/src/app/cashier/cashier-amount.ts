@@ -97,7 +97,7 @@ export class CashierAmountComponent implements OnInit {
     });
   }
 
-  protected logout(): void {
-    this.router.navigate(['/cashier/login']);
+  protected goBack(): void {
+    this.router.navigate(['/cashier/transactions']);
   }
 }
