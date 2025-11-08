@@ -21,6 +21,7 @@ dependencies {
     implementation("io.quarkus:quarkus-jdbc-postgresql")
     implementation("io.quarkus:quarkus-arc")
     implementation("io.quarkus:quarkus-hibernate-orm")
+    implementation("io.quarkus:quarkus-mailer")
     implementation("org.projectlombok:lombok:1.18.42")
     implementation("com.google.zxing:javase:3.5.3")
 
