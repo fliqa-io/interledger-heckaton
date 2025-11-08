@@ -1,10 +1,9 @@
 package io.fliqa.hackaton.infrastructure.web;
 
+import io.fliqa.hackaton.service.PaymentService;
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.Produces;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.*;
 
 import java.util.UUID;
 
@@ -12,10 +11,16 @@ import java.util.UUID;
 @Path("/pay")
 public class PayByLinkResource {
 
-    @GET
+    private final PaymentService service;
+
+    @Inject
+    public PayByLinkResource(PaymentService service) {
+        this.service = service;
+    }
+
+    @POST
     @Path("/{id}")
-    @Produces("text/plain")
-    public String getPayByLinkAsText(@PathParam("id") UUID id) {
+    public String makePayment(@PathParam("id") UUID id) {
         return "Pay by link for " + id;
     }
 }

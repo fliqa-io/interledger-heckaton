@@ -8,7 +8,6 @@ import jakarta.inject.Inject;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.UUID;
@@ -16,12 +15,12 @@ import java.util.UUID;
 @ApplicationScoped
 @Path("/payment")
 @Slf4j
-public class VendorResource {
+public class PaymentResource {
 
     private final PaymentService paymentService;
 
     @Inject
-    public VendorResource(PaymentService paymentService) {
+    public PaymentResource(PaymentService paymentService) {
         this.paymentService = paymentService;
     }
 

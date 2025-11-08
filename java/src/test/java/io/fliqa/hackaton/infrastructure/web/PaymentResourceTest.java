@@ -13,7 +13,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
 @QuarkusTest
-class VendorResourceTest {
+class PaymentResourceTest {
 
     @Test
     void creates_new_payment() {
