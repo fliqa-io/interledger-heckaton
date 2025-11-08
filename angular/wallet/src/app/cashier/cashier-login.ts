@@ -3,6 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ChangeDetectionStrategy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { CashierProfileService, type CashierProfile } from '../services/cashier-profile.service';
 
 @Component({
   selector: 'app-cashier-login',
@@ -15,6 +16,7 @@ export class CashierLoginComponent implements OnInit {
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
   private readonly http = inject(HttpClient);
+  private readonly profileService = inject(CashierProfileService);
 
   protected readonly errorMessage = signal<string>('');
   protected readonly isLoading = signal(false);
@@ -81,9 +83,15 @@ export class CashierLoginComponent implements OnInit {
     // Verify OTP with backend
     const url = `/api/cashier/login?email=${encodeURIComponent(email)}&otp=${encodeURIComponent(otp)}`;
 
-    this.http.get(url, { observe: 'response' }).subscribe({
-      next: () => {
+    this.http.get<CashierProfile>(url, { observe: 'response' }).subscribe({
+      next: (response) => {
         this.isLoading.set(false);
+
+        // Store user profile
+        if (response.body) {
+          this.profileService.setProfile(response.body);
+        }
+
         void this.router.navigate(['/cashier/transactions'], {
           state: { email: email, name: email.split('@')[0] }
         });
@@ -159,9 +167,15 @@ export class CashierLoginComponent implements OnInit {
     // Call backend to verify OTP
     const url = `/api/cashier/login?email=${encodeURIComponent(emailValue)}&otp=${encodeURIComponent(otpValue)}`;
 
-    this.http.get(url, { observe: 'response' }).subscribe({
-      next: () => {
+    this.http.get<CashierProfile>(url, { observe: 'response' }).subscribe({
+      next: (response) => {
         this.isLoading.set(false);
+
+        // Store user profile
+        if (response.body) {
+          this.profileService.setProfile(response.body);
+        }
+
         void this.router.navigate(['/cashier/transactions'], {
           state: { email: emailValue, name: emailValue.split('@')[0] }
         });
