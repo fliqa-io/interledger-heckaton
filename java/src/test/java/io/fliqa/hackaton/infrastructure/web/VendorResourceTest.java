@@ -62,7 +62,7 @@ class VendorResourceTest {
                 allOf(
                         notNullValue(),
                         hasProperty("id", notNullValue()),
-                        hasProperty("amount", closeTo(BigDecimal.ONE, BigDecimal.ZERO)),
+                        hasProperty("amount", is(new BigDecimal("1.00"))),
                         hasProperty("currency", is("EUR")))
         );
     }
