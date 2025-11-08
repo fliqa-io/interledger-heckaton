@@ -1,0 +1,6 @@
+### make payment
+POST http://localhost:8080/pay/22138913-7bab-4255-8ea2-739355174c3b
+
+
+### payment does not exist
+POST http://localhost:8080/pay/22138913-7bab-4255-8ea2-739355174c3a

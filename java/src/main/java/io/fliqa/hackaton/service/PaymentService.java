@@ -37,4 +37,8 @@ public class PaymentService {
     public Payment getById(@NotNull UUID id) {
         return repository.findByIdOptional(id).orElseThrow(NotFoundException::new);
     }
+
+    public void pay(UUID paymentId) {
+        var payment = getById(paymentId);
+    }
 }

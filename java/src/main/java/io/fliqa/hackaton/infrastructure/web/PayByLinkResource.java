@@ -20,7 +20,10 @@ public class PayByLinkResource {
 
     @POST
     @Path("/{id}")
-    public String makePayment(@PathParam("id") UUID id) {
+    public String makePayment(@PathParam("id") UUID id)
+    {
+        service.pay(id);
+
         return "Pay by link for " + id;
     }
 }
