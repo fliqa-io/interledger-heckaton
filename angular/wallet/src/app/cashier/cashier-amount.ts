@@ -21,7 +21,13 @@ export class CashierAmountComponent implements OnInit {
     // Read amount from query parameter if provided
     const amountParam = this.route.snapshot.queryParamMap.get('amount');
     if (amountParam) {
-      this.displayAmount.set(amountParam);
+      let amount = parseFloat(amountParam);
+      if (amount && !isNaN(amount) && amount > 0) {
+        this.displayAmount.set(amount.toFixed(2).toString());
+      }
+      else {
+        this.displayAmount.set('0');
+      }
       this.amountForm.patchValue({ amount: amountParam });
     }
   }
