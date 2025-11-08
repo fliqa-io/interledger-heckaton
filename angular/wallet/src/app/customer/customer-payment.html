@@ -18,17 +18,28 @@
         </div>
       </div>
 
-      <div class="wallet-info">
-        <div class="wallet-label">From Wallet</div>
-        <div class="wallet-field">
-          <span class="field-label">Server:</span>
-          <span class="wallet-server">{{ walletServer() }}</span>
+      @if (needsWalletInfo()) {
+        <div class="wallet-info-missing">
+          <div class="warning-icon">⚠️</div>
+          <p class="warning-title">Wallet Required</p>
+          <p class="warning-text">Please login with your wallet address to proceed with this payment</p>
+          <button type="button" class="login-button" (click)="proceedWithLogin()">
+            Login with Wallet
+          </button>
         </div>
-        <div class="wallet-field">
-          <span class="field-label">Address:</span>
-          <span class="wallet-name">{{ walletName() }}</span>
+      } @else {
+        <div class="wallet-info">
+          <div class="wallet-label">From Wallet</div>
+          <div class="wallet-field">
+            <span class="field-label">Server:</span>
+            <span class="wallet-server">{{ walletServer() }}</span>
+          </div>
+          <div class="wallet-field">
+            <span class="field-label">Address:</span>
+            <span class="wallet-name">{{ walletName() }}</span>
+          </div>
         </div>
-      </div>
+      }
 
       <div class="payment-details">
         <div class="detail-row">
@@ -65,7 +76,7 @@
           type="button"
           class="confirm-button"
           (click)="confirmPayment()"
-          [disabled]="isProcessing()"
+          [disabled]="isProcessing() || needsWalletInfo()"
         >
           @if (isProcessing()) {
             <span>Processing...</span>

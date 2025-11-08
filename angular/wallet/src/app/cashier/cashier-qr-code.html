@@ -63,6 +63,16 @@
         <p>Scan this QR code with the customer's wallet app to process the payment</p>
       </div>
 
+      <div class="payment-info">
+        <div class="info-label">Payment ID</div>
+        <div class="info-value payment-id">{{ paymentId() }}</div>
+
+        <div class="info-label">Payment URL (for testing)</div>
+        <div class="info-value payment-url">
+          <a [href]="paymentUrl()" target="_blank">{{ paymentUrl() }}</a>
+        </div>
+      </div>
+
       <div class="actions">
         <button type="button" class="secondary-button" (click)="newTransaction()">
           New Transaction

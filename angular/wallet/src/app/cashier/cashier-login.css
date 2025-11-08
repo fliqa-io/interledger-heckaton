@@ -160,3 +160,31 @@ label {
 .button-group .submit-button {
   flex: 2;
 }
+
+.auto-login-message {
+  text-align: center;
+  padding: 2rem 1rem;
+}
+
+.auto-login-message p {
+  margin-top: 1rem;
+  color: #4a5568;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  margin: 0 auto;
+  border: 4px solid #e2e8f0;
+  border-top-color: #667eea;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

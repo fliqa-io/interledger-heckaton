@@ -11,7 +11,7 @@ import { WalletStorageService } from '../services/wallet-storage.service';
   styleUrl: './customer-payment.css',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CustomerPaymentComponent implements OnInit {
+export class CustomerPaymentEntryComponent implements OnInit {
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
   private readonly walletStorage = inject(WalletStorageService);

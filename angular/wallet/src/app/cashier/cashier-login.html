@@ -3,7 +3,12 @@
         <h1>Cashier Login</h1>
         <p class="subtitle">Sign in to cash register</p>
 
-        @if (!otpSent()) {
+        @if (isLoading() && !otpSent()) {
+            <div class="auto-login-message">
+                <div class="spinner"></div>
+                <p>Verifying your credentials...</p>
+            </div>
+        } @else if (!otpSent()) {
             <form [formGroup]="emailForm" (ngSubmit)="sendOTP()">
                 <div class="form-group">
                     <label for="email">Email Address</label>
@@ -46,6 +51,7 @@
                         <div class="error-message">{{ errorMessage() }}</div>
                     }
                     <input
+                            #otpInput
                             id="otp"
                             type="text"
                             formControlName="otp"

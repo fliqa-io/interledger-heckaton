@@ -40,6 +40,10 @@ export const routes: Routes = [
   },
   {
     path: 'customer/payment',
+    loadComponent: () => import('./customer/customer-payment-entry').then(m => m.CustomerPaymentEntryComponent)
+  },
+  {
+    path: 'customer/payment/:paymentId',
     loadComponent: () => import('./customer/customer-payment').then(m => m.CustomerPaymentComponent)
   },
   {

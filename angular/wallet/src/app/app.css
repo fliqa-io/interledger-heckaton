@@ -84,7 +84,7 @@ main {
     justify-content: space-around;
     width: 100%;
     max-width: 700px;
-    margin-bottom: 3rem;
+    /*margin-bottom: 3rem;*/
 }
 
 .content h1 {
@@ -95,11 +95,11 @@ main {
     margin-top: 1.5rem;
 }
 
-.divider {
+/*.divider {
     width: 1px;
     background: var(--red-to-pink-to-purple-vertical-gradient);
     margin-inline: 0.5rem;
-}
+}*/
 
 .pill-group {
     display: flex;

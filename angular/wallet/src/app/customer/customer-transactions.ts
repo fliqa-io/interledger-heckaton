@@ -77,7 +77,10 @@ export class CustomerTransactionsComponent implements OnInit {
   }
 
   protected scanToPay(): void {
-    this.router.navigate(['/customer/payment'], {
+    // Generate a mock payment ID (in production, this would come from scanning a QR code)
+    const mockPaymentId = 'PAY-' + Date.now();
+
+    this.router.navigate(['/customer/payment', mockPaymentId], {
       state: {
         walletServer: this.walletServer(),
         walletName: this.walletName()
