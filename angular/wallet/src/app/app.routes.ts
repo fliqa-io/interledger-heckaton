@@ -8,6 +8,11 @@ export const routes: Routes = [
   },
   // Cashier routes
   {
+    path: 'cashier',
+    redirectTo: '/cashier/login',
+    pathMatch: 'full'
+  },
+  {
     path: 'cashier/login',
     loadComponent: () => import('./cashier/cashier-login').then(m => m.CashierLoginComponent)
   },
@@ -20,6 +25,11 @@ export const routes: Routes = [
     loadComponent: () => import('./cashier/cashier-qr-code').then(m => m.CashierQRCodeComponent)
   },
   // Customer routes
+  {
+    path: 'customer',
+    redirectTo: '/customer/login',
+    pathMatch: 'full'
+  },
   {
     path: 'customer/login',
     loadComponent: () => import('./customer/customer-login').then(m => m.CustomerLoginComponent)

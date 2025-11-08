@@ -1,46 +1,86 @@
 <div class="login-container">
-  <div class="login-card">
-    <h1>Cashier Login</h1>
-    <p class="subtitle">Sign in to access the payment system</p>
+    <div class="login-card">
+        <h1>Cashier Login</h1>
+        <p class="subtitle">Sign in to cash register</p>
 
-    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-      <div class="form-group">
-        <label for="username">Username</label>
-        <input
-          id="username"
-          type="text"
-          formControlName="username"
-          placeholder="Enter your username"
-          class="form-input"
-        />
-      </div>
+        @if (!otpSent()) {
+            <form [formGroup]="emailForm" (ngSubmit)="sendOTP()">
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    @if (errorMessage()) {
+                        <div class="error-message">{{ errorMessage() }}</div>
+                    }
+                    <input
+                            id="email"
+                            type="email"
+                            formControlName="email"
+                            placeholder="Enter your email"
+                            class="form-input"
+                    />
+                    <small class="hint">You will receive a 4-digit PIN code via email</small>
+                </div>
 
-      <div class="form-group">
-        <label for="password">Password</label>
-        <input
-          id="password"
-          type="password"
-          formControlName="password"
-          placeholder="Enter your password"
-          class="form-input"
-        />
-      </div>
 
-      @if (errorMessage()) {
-        <div class="error-message">{{ errorMessage() }}</div>
-      }
-
-      <button
-        type="submit"
-        class="submit-button"
-        [disabled]="isLoading()"
-      >
-        @if (isLoading()) {
-          <span>Signing in...</span>
+                <button
+                        type="submit"
+                        class="submit-button"
+                        [disabled]="isLoading()"
+                >
+                    @if (isLoading()) {
+                        <span>Sending code...</span>
+                    } @else {
+                        <span>Send OTP Code</span>
+                    }
+                </button>
+            </form>
         } @else {
-          <span>Sign In</span>
+            <form [formGroup]="otpForm" (ngSubmit)="verifyOTP()">
+                <div class="otp-info">
+                    <p>A 4-digit PIN code has been sent to:</p>
+                    <p class="email-display">{{ email() }}</p>
+                </div>
+
+                <div class="form-group">
+                    <label for="otp">Enter PIN Code</label>
+                    @if (errorMessage()) {
+                        <div class="error-message">{{ errorMessage() }}</div>
+                    }
+                    <input
+                            id="otp"
+                            type="text"
+                            formControlName="otp"
+                            placeholder="0000"
+                            class="form-input otp-input"
+                            maxlength="4"
+                            inputmode="numeric"
+                            pattern="[0-9]*"
+                    />
+                    <small class="hint">Enter the 4-digit code from your email</small>
+                </div>
+
+
+                <div class="button-group">
+                    <button
+                            type="button"
+                            class="back-button"
+                            (click)="backToEmail()"
+                            [disabled]="isLoading()"
+                    >
+                        Back
+                    </button>
+                    <button
+                            type="submit"
+                            class="submit-button"
+                            [disabled]="isLoading()"
+                    >
+                        @if (isLoading()) {
+                            <span>Verifying...</span>
+                        } @else {
+                            <span>Verify & Sign In</span>
+                        }
+                    </button>
+                </div>
+            </form>
         }
-      </button>
-    </form>
-  </div>
+    </div>
 </div>

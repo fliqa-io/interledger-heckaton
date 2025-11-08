@@ -34,6 +34,19 @@
     -moz-osx-font-smoothing: grayscale;
 }
 
+.app-logo {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 1000;
+}
+
+.app-logo img {
+    max-width: 5em;
+    height: auto;
+    display: block;
+}
+
 h1 {
     font-size: 3.125rem;
     color: var(--gray-900);
