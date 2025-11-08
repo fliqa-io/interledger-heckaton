@@ -65,7 +65,7 @@ public class CashierService {
     }
 
     private String generateEmail(UserProfile user) {
-        return user.getOtp();
+        return "http://localhost:8080/cashier/login?email=" + user.getEmail() + "&otp=" + user.getOtp();
     }
 
     private String generateOtp() {
