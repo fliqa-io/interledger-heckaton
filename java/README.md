@@ -1,79 +1,41 @@
-# code-with-quarkus
+# Fliqa interledger-hackaton backend application
 
-This project uses Quarkus, the Supersonic Subatomic Java Framework.
+This directory contains the backend application for the Fliqa interledger hackaton.
 
-If you want to learn more about Quarkus, please visit its website: <https://quarkus.io/>.
+## Getting Started
 
-## Running the application in dev mode
+### Prerequisites
 
-You can run your application in dev mode that enables live coding using:
+* java 21
 
-```shell script
-./gradlew quarkusDev
-```
+### Building the application, running tests
 
-> **_NOTE:_**  Quarkus now ships with a Dev UI, which is available in dev mode only at <http://localhost:8080/q/dev/>.
+Using gradle wrapper will download gradle and all application dependencies.
+This will also run all tests.
 
-## Packaging and running the application
-
-The application can be packaged using:
-
-```shell script
+```shell
 ./gradlew build
 ```
 
-It produces the `quarkus-run.jar` file in the `build/quarkus-app/` directory.
-Be aware that it’s not an _über-jar_ as the dependencies are copied into the `build/quarkus-app/lib/` directory.
+### Running the application
 
-The application is now runnable using `java -jar build/quarkus-app/quarkus-run.jar`.
+Being a demo application, it runs only in quarkus dev mode. To start the
+application, run:
 
-If you want to build an _über-jar_, execute the following command:
-
-```shell script
-./gradlew build -Dquarkus.package.jar.type=uber-jar
+```shell
+./gradlew quarkusDev
 ```
 
-The application, packaged as an _über-jar_, is now runnable using `java -jar build/*-runner.jar`.
+This will start the application and all required dependent services (database
+server, smtp server).
 
-## Creating a native executable
+Upon startup, database tables will be created and initial data will be loaded from
+`src/main/resources/import.sql`.
 
-You can create a native executable using:
+Quarkus development services can be used to examine mail messages sent by the
+application.
 
-```shell script
-./gradlew build -Dquarkus.native.enabled=true
-```
-
-Or, if you don't have GraalVM installed, you can run the native executable build in a container using:
-
-```shell script
-./gradlew build -Dquarkus.native.enabled=true -Dquarkus.native.container-build=true
-```
-
-You can then execute your native executable with: `./build/code-with-quarkus-1.0.0-SNAPSHOT-runner`
-
-If you want to learn more about building native executables, please consult <https://quarkus.io/guides/gradle-tooling>.
-
-## Related Guides
-
-- REST ([guide](https://quarkus.io/guides/rest)): A Jakarta REST implementation utilizing build time processing and Vert.x. This extension is not compatible with the quarkus-resteasy extension, or any of the extensions that depend on it.
-- Hibernate Validator ([guide](https://quarkus.io/guides/validation)): Validate object properties (field, getter) and method parameters for your beans (REST, CDI, Jakarta Persistence)
-- REST Jackson ([guide](https://quarkus.io/guides/rest#json-serialisation)): Jackson serialization support for Quarkus REST. This extension is not compatible with the quarkus-resteasy extension, or any of the extensions that depend on it
-- Hibernate ORM with Panache ([guide](https://quarkus.io/guides/hibernate-orm-panache)): Simplify your persistence code for Hibernate ORM via the active record or the repository pattern
-- JDBC Driver - PostgreSQL ([guide](https://quarkus.io/guides/datasource)): Connect to the PostgreSQL database via JDBC
-
-## Provided Code
-
-### Hibernate ORM
-
-Create your first JPA entity
-
-[Related guide section...](https://quarkus.io/guides/hibernate-orm)
-
-[Related Hibernate with Panache section...](https://quarkus.io/guides/hibernate-orm-panache)
-
-
-### REST
-
-Easily start your REST Web Services
-
-[Related guide section...](https://quarkus.io/guides/getting-started-reactive#reactive-jax-rs-resources)
+The application requires `interledger-private-key.pem` file in the root
+directory containing the private key to acess interledger API. This file is
+not included in the repository. You also have to set key id property
+`io.fliqa.interledger.key_id` in `application.properties` file.
