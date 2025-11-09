@@ -33,9 +33,17 @@ Upon startup, database tables will be created and initial data will be loaded fr
 `src/main/resources/import.sql`.
 
 Quarkus development services can be used to examine mail messages sent by the
-application.
+application. See: http://localhost:8080/q/dev-ui/quarkus-mailpit/mailpit-ui 
+
+
 
 The application requires `interledger-private-key.pem` file in the root
-directory containing the private key to acess interledger API. This file is
-not included in the repository. You also have to set key id property
-`io.fliqa.interledger.key_id` in `application.properties` file.
+directory containing the private key to access interledger API. 
+
+This file is not included in the repository. 
+
+You also have to set following properties in `application.properties` file:
+ * `io.fliqa.interledger.private_key_file`=interledger-private-key.pem
+ * `io.fliqa.interledger.intermediate_wallet`=YOUR_INTERMEDIATE_WALLET_ADDRESS
+ * `io.fliqa.interledger.key_id`=YOUR_KEY_ID
+
