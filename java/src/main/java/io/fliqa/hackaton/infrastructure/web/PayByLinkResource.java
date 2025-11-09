@@ -6,6 +6,7 @@ import jakarta.inject.Inject;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.MediaType;
 
 import java.net.URI;
 import java.util.UUID;
@@ -23,6 +24,7 @@ public class PayByLinkResource {
 
     @POST
     @Path("/{id}")
+    @Produces(MediaType.TEXT_PLAIN)
     public URI makePayment(
             @PathParam("id") @NotNull UUID id,
             @QueryParam("customer") @NotNull @NotEmpty String customer) {
