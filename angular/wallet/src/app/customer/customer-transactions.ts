@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { ChangeDetectionStrategy } from '@angular/core';
 import { DecimalPipe, DatePipe } from '@angular/common';
 import { WalletStorageService, type WalletInfo } from '../services/wallet-storage.service';
+import { CustomerPaymentService, type PaymentHistoryEntry } from '../services/customer-payment.service';
 
 interface Transaction {
   id: string;
@@ -22,6 +23,7 @@ interface Transaction {
 export class CustomerTransactionsComponent implements OnInit {
   private readonly router = inject(Router);
   private readonly walletStorage = inject(WalletStorageService);
+  private readonly paymentService = inject(CustomerPaymentService);
 
   protected readonly walletAddress = signal<string>('');
 
@@ -59,40 +61,19 @@ export class CustomerTransactionsComponent implements OnInit {
   }
 
   private loadTransactions(): void {
-    // TODO: Load actual transactions from backend
-    // For now, using mock data
-    const mockTransactions: Transaction[] = [
-      {
-        id: 'TXN001',
-        amount: '25.00',
-        merchant: 'FLIQA_WALLET',
-        status: 'completed',
-        date: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000) // 2 days ago
-      },
-      {
-        id: 'TXN002',
-        amount: '50.00',
-        merchant: 'Coffee Shop',
-        status: 'completed',
-        date: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000) // 5 days ago
-      },
-      {
-        id: 'TXN003',
-        amount: '15.50',
-        merchant: 'Restaurant',
-        status: 'failed',
-        date: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000) // 7 days ago
-      },
-      {
-        id: 'TXN004',
-        amount: '100.00',
-        merchant: 'Online Store',
-        status: 'completed',
-        date: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000) // 10 days ago
-      }
-    ];
+    // Load payment history from storage
+    const paymentHistory = this.paymentService.getPaymentHistory();
 
-    this.transactions.set(mockTransactions);
+    // Convert payment history entries to transaction format
+    const transactions: Transaction[] = paymentHistory.map((entry) => ({
+      id: entry.id,
+      amount: `${entry.amount.toFixed(2)}`,
+      merchant: entry.merchant,
+      status: entry.status,
+      date: new Date(entry.date)
+    }));
+
+    this.transactions.set(transactions);
   }
 
   protected scanToPay(): void {
@@ -108,7 +89,11 @@ export class CustomerTransactionsComponent implements OnInit {
   }
 
   protected logout(): void {
-    this.router.navigate(['/customer/login']);
+    // Clear wallet info and payment history on logout
+    this.walletStorage.clearWalletInfo();
+    this.paymentService.clearPaymentHistory();
+
+    void this.router.navigate(['/customer/login']);
   }
 
   protected getStatusClass(status: string): string {

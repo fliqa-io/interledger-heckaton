@@ -75,6 +75,11 @@ export class CustomerResultComponent implements OnInit {
         this.success.set(true);
         this.transactionId.set(paymentId);
 
+        // Add completed payment to history
+        if (payment) {
+          this.paymentService.addCompletedPayment(payment);
+        }
+
         // Clear payment from storage
         this.paymentService.clearPayment();
       },
@@ -87,6 +92,12 @@ export class CustomerResultComponent implements OnInit {
         } else {
           this.errorMessage.set('Payment finalization failed. Please contact support.');
         }
+
+        // Add failed payment to history
+        if (payment) {
+          this.paymentService.addFailedPayment(payment);
+        }
+
         console.error('Payment finalization failed:', error);
       }
     });
@@ -99,5 +110,9 @@ export class CustomerResultComponent implements OnInit {
       result += chars.charAt(Math.floor(Math.random() * chars.length));
     }
     return result;
+  }
+
+  protected goHome(): void {
+    this.router.navigate(['/customer/transactions']);
   }
 }
