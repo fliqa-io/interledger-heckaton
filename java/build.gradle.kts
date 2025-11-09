@@ -25,6 +25,7 @@ dependencies {
     implementation("io.quarkiverse.mailpit:quarkus-mailpit:1.7.0")
     implementation("org.projectlombok:lombok:1.18.42")
     implementation("com.google.zxing:javase:3.5.3")
+    implementation("io.fliqa:interledger:1.0.1")
 
     testImplementation("io.quarkus:quarkus-junit5")
     testImplementation("io.rest-assured:rest-assured")

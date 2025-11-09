@@ -21,7 +21,7 @@ class PaymentResourceTest {
 
     @Test
     void creates_new_payment() {
-        var request = new CreatePaymentRequest(BigDecimal.ONE, "EUR");
+        var request = new CreatePaymentRequest(BigDecimal.ONE, "EUR", "testko@test.com");
 
         var result = given()
                 .when()
