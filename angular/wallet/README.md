@@ -5,6 +5,8 @@ featuring separate interfaces for cashiers (merchants) and customers.
 
 The cashier app solves simplifies the usage of open-payments via ILP by reducing friction between the Cashier and the Customer.
 
+> **NOTE:** This is a demonstration project not suitable for production use
+
 ## Build and run
 
 ```shell
@@ -73,8 +75,6 @@ The customer interface allows users to make payments using their Interledger wal
    - Cleared on logout
 
 ## Technical Features
-
-> NOTE: This is a demonstration project not suitable for production use
 
 - **State Management**: Signals for reactive state
 - **Storage Services**:
