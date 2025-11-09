@@ -23,6 +23,7 @@ The cashier interface allows merchants to create and monitor payment requests:
 
 1. **Login** (`/cashier/login`)
    - Enter email address to receive OTP
+   - OTP is send to email (see: http://localhost:8080/q/dev-ui/quarkus-mailpit/mailpit-ui)
    - Verify with 4-digit PIN code
 
 2. **Create Payment** (`/cashier/amount`)
