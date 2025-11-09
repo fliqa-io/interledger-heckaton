@@ -4,6 +4,7 @@ import io.fliqa.client.interledger.InterledgerApiClient;
 import io.fliqa.client.interledger.InterledgerApiClientImpl;
 import io.fliqa.client.interledger.model.WalletAddress;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.inject.Produces;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
@@ -20,12 +21,15 @@ public class InterledgerApiClientFactory {
 
     private final PrivateKey privateKey;
     private final String keyId;
+    private final WalletAddress intermediateWallet;
 
     public InterledgerApiClientFactory(
             @ConfigProperty(name = "io.fliqa.interledger.private_key_file")
             String privateKeyFile,
             @ConfigProperty(name = "io.fliqa.interledger.key_id")
-            String keyId
+            String keyId,
+            @ConfigProperty(name = "io.fliqa.interledger.intermediate_wallet")
+            String intermediateWallet
     ) {
         try {
             this.privateKey = privateKeyFromFile(privateKeyFile);
@@ -34,10 +38,12 @@ public class InterledgerApiClientFactory {
         }
 
         this.keyId = keyId;
+        this.intermediateWallet = new WalletAddress(intermediateWallet);
     }
 
-    public InterledgerApiClient createClient(WalletAddress walletAddress) {
-        return new InterledgerApiClientImpl(walletAddress, privateKey, keyId);
+    @Produces
+    public InterledgerApiClient createClient() {
+        return new InterledgerApiClientImpl(intermediateWallet, privateKey, keyId);
     }
 
     private PrivateKey privateKeyFromFile(String privateKeyFile) throws Exception {

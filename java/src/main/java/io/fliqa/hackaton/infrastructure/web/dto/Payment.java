@@ -1,5 +1,6 @@
 package io.fliqa.hackaton.infrastructure.web.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
@@ -29,10 +30,14 @@ public class Payment implements Serializable {
     @Column(name = "currency")
     String currency;
 
+    @JsonIgnore
     @NotNull
     @NotEmpty
     @Email
     String cashier;
 
     Instant created;
+
+    @Transient
+    WalletData walletData;
 }
