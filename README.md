@@ -4,7 +4,6 @@ A payment application demonstrating seamless merchant-to-customer transactions u
 
 ## Links
 
-- **Presentation**: // TODO
 - **Repository**: https://github.com/fliqa-io/interledger-heckaton
 - **Java SDK**: https://github.com/fliqa-io/interledger
 
@@ -36,6 +35,8 @@ cd java
 # The backend will start on http://localhost:8080
 ```
 
+See detailed instruction on: [/java/README.md](/java/README.md)
+
 ### Frontend Setup (Angular)
 
 ```bash
@@ -50,13 +51,15 @@ npm start
 # The frontend will start on http://localhost:4200
 ```
 
+See detailed instruction on: [/angular/README.md](/angular/README.md)
+
 ### Configuration
 
 The application uses the following default configuration:
 
 - **Backend**: `http://localhost:8080`
 - **Frontend**: `http://localhost:4200`
-- **Interledger Wallet**: `https://ilp.interledger-test.dev/fliqa-initiator`
+- **Interledger Intermediate Wallet**: `https://ilp.interledger-test.dev/fliqa-initiator`
 - **Payment Flow**: QR codes link to `http://localhost:4200/customer/payment/{id}`
 
 Backend configuration can be modified in `java/src/main/resources/application.properties`.
