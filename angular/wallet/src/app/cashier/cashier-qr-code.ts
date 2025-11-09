@@ -4,6 +4,7 @@ import { ChangeDetectionStrategy } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { CashierTransactionsService } from '../services/cashier-transactions.service';
 
 interface PaymentStatus {
   id: string;
@@ -25,6 +26,7 @@ export class CashierQRCodeComponent implements OnInit, OnDestroy {
   private readonly route = inject(ActivatedRoute);
   private readonly http = inject(HttpClient);
   private readonly sanitizer = inject(DomSanitizer);
+  private readonly transactionsService = inject(CashierTransactionsService);
   private statusPollingInterval: number | null = null;
 
   protected readonly amount = signal<string>('0.00');
@@ -103,12 +105,28 @@ export class CashierQRCodeComponent implements OnInit, OnDestroy {
         // Stop polling if payment is completed or failed
         if (status === 'Success' || status === 'Failed') {
           this.stopStatusPolling();
+
+          // Store completed transaction
+          if (status === 'Success') {
+            this.storeCompletedTransaction(payment);
+          }
         }
       },
       error: (error) => {
         console.error('Failed to check payment status:', error);
         // Don't stop polling on error, continue checking
       }
+    });
+  }
+
+  private storeCompletedTransaction(payment: PaymentStatus): void {
+    this.transactionsService.addTransaction({
+      id: payment.id,
+      amount: payment.amount.toString(),
+      currency: payment.currency,
+      customer: `Payment #${payment.id.substring(0, 8)}`,
+      status: 'completed',
+      date: new Date()
     });
   }
 
