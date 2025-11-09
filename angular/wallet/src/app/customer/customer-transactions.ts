@@ -2,6 +2,7 @@ import { Component, signal, inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ChangeDetectionStrategy } from '@angular/core';
 import { DecimalPipe, DatePipe } from '@angular/common';
+import { WalletStorageService, type WalletInfo } from '../services/wallet-storage.service';
 
 interface Transaction {
   id: string;
@@ -20,22 +21,40 @@ interface Transaction {
 })
 export class CustomerTransactionsComponent implements OnInit {
   private readonly router = inject(Router);
+  private readonly walletStorage = inject(WalletStorageService);
 
-  protected readonly walletServer = signal<string>('');
+  protected readonly walletAddress = signal<string>('');
+
   protected readonly walletName = signal<string>('');
+  protected readonly walletCurrency = signal<string>('');
+
   protected readonly transactions = signal<Transaction[]>([]);
 
   ngOnInit(): void {
-    const navigation = this.router.getCurrentNavigation();
-    const state = navigation?.extras?.state || history.state;
+    // Try to get wallet info from storage first
+    const walletInfo = this.walletStorage.getWalletInfo();
 
-    if (state?.['walletServer'] && state?.['walletName']) {
-      this.walletServer.set(state['walletServer']);
-      this.walletName.set(state['walletName']);
+    if (walletInfo) {
+      // Use wallet info from storage
+      this.walletAddress.set(walletInfo.address);
+      this.walletName.set(walletInfo.publicName);
+      this.walletCurrency.set(walletInfo.assetCode);
+
       this.loadTransactions();
     } else {
-      // If no wallet info, redirect to login
-      this.router.navigate(['/customer/login']);
+      // Fallback: check navigation state
+      const navigation = this.router.getCurrentNavigation();
+      const state = navigation?.extras?.state || history.state;
+
+      if (state?.['walletServer'] && state?.['walletName']) {
+        this.walletAddress.set(state['walletServer']);
+        this.walletName.set(state['walletName']);
+
+        this.loadTransactions();
+      } else {
+        // If no wallet info in storage or state, redirect to login
+        void this.router.navigate(['/customer/login']);
+      }
     }
   }
 
@@ -82,7 +101,7 @@ export class CustomerTransactionsComponent implements OnInit {
 
     this.router.navigate(['/customer/payment'], {
       state: {
-        walletServer: this.walletServer(),
+        walletServer: this.walletAddress(),
         walletName: this.walletName()
       }
     });

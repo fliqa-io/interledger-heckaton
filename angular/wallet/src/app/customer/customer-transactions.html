@@ -2,7 +2,7 @@
   <div class="transactions-card">
     <div class="header">
       <div class="header-content">
-        <h1>My Wallet</h1>
+        <h1>{{walletName()}} [{{walletCurrency()}}]</h1>
         <button type="button" class="logout-button" (click)="logout()">Logout</button>
       </div>
     </div>
@@ -11,8 +11,7 @@
       <div class="wallet-info">
         <div class="wallet-label">Wallet Address</div>
         <div class="wallet-details">
-          <div class="wallet-server">{{ walletServer() }}</div>
-          <div class="wallet-name">{{ walletName() }}</div>
+          <div class="wallet-server">{{ walletAddress() }}</div>
         </div>
       </div>
 

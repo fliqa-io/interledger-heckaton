@@ -51,7 +51,7 @@ export const routes: Routes = [
     loadComponent: () => import('./customer/customer-payment').then(m => m.CustomerPaymentComponent)
   },
   {
-    path: 'customer/result',
+    path: 'customer/payment/:paymentId/confirm',
     loadComponent: () => import('./customer/customer-result').then(m => m.CustomerResultComponent)
   }
 ];
