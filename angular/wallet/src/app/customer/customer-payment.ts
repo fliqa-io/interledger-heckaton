@@ -2,7 +2,16 @@ import { Component, signal, inject, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ChangeDetectionStrategy } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
 import { WalletStorageService } from '../services/wallet-storage.service';
+
+interface PaymentDetails {
+  id: string;
+  amount: number;
+  currency: string;
+  cashier: string;
+  created: string;
+}
 
 @Component({
   selector: 'app-customer-payment',
@@ -14,14 +23,18 @@ import { WalletStorageService } from '../services/wallet-storage.service';
 export class CustomerPaymentComponent implements OnInit {
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
+  private readonly http = inject(HttpClient);
   private readonly walletStorage = inject(WalletStorageService);
 
   protected readonly paymentId = signal<string>('');
   protected readonly walletServer = signal<string>('');
   protected readonly walletName = signal<string>('');
   protected readonly amount = signal<string>('0.00');
+  protected readonly currency = signal<string>('EUR');
   protected readonly merchantId = signal<string>('FLIQA_WALLET');
   protected readonly isProcessing = signal(false);
+  protected readonly isLoading = signal(false);
+  protected readonly errorMessage = signal<string>('');
   protected readonly needsWalletInfo = signal(false);
 
   ngOnInit(): void {
@@ -30,7 +43,7 @@ export class CustomerPaymentComponent implements OnInit {
 
     if (!paymentIdParam) {
       // No payment ID, redirect to transactions
-      this.router.navigate(['/customer/transactions']);
+      void this.router.navigate(['/customer/transactions']);
       return;
     }
 
@@ -61,22 +74,37 @@ export class CustomerPaymentComponent implements OnInit {
   }
 
   private loadPaymentDetails(paymentId: string): void {
-    // TODO: Load actual payment details from backend using payment ID
-    // The backend would return: amount, merchant, etc.
-    // For now, using mock data based on payment ID
+    this.isLoading.set(true);
+    this.errorMessage.set('');
 
-    // Mock: extract amount from payment ID if it follows a pattern
-    // In production, this would be a real API call
-    const mockAmount = '25.00'; // Default
-    this.amount.set(mockAmount);
-    this.merchantId.set('FLIQA_WALLET');
+    // Load payment details from backend
+    this.http.get<PaymentDetails>(`/api/payment/${paymentId}`, {
+      headers: { Accept: 'application/json' }
+    }).subscribe({
+      next: (payment) => {
+        this.isLoading.set(false);
 
-    console.log(`Loading payment details for payment ID: ${paymentId}`);
+        // Store payment details in localStorage
+        localStorage.setItem('customerCurrentPayment', JSON.stringify(payment));
+
+        // Set component state from payment details
+        this.amount.set(payment.amount.toString());
+        this.currency.set(payment.currency);
+        this.merchantId.set(payment.cashier);
+
+        console.log(`Loaded payment: ${payment.id}, Amount: ${payment.amount} ${payment.currency}, Cashier: ${payment.cashier}`);
+      },
+      error: (error) => {
+        this.isLoading.set(false);
+        this.errorMessage.set(error.error?.message || 'Failed to load payment details. Please try again.');
+        console.error('Failed to load payment details:', error);
+      }
+    });
   }
 
   protected proceedWithLogin(): void {
     // Redirect to login and come back to this payment
-    this.router.navigate(['/customer/login'], {
+    void this.router.navigate(['/customer/login'], {
       queryParams: { returnUrl: `/customer/payment/${this.paymentId()}` }
     });
   }
@@ -89,7 +117,7 @@ export class CustomerPaymentComponent implements OnInit {
       this.isProcessing.set(false);
       // Simulate success (could also simulate failure for testing)
       const success = Math.random() > 0.1; // 90% success rate for demo
-      this.router.navigate(['/customer/result'], {
+      void this.router.navigate(['/customer/result'], {
         state: {
           success,
           amount: this.amount(),
@@ -101,6 +129,6 @@ export class CustomerPaymentComponent implements OnInit {
   }
 
   protected cancelPayment(): void {
-    this.router.navigate(['/customer/payment']);
+    void this.router.navigate(['/customer/payment']);
   }
 }

@@ -26,6 +26,12 @@ export class CashierLoginComponent implements OnInit {
   // Reference to the OTP input field
   private readonly otpInput = viewChild<ElementRef<HTMLInputElement>>('otpInput');
 
+  // Reference to the email input field
+  private readonly emailInput = viewChild<ElementRef<HTMLInputElement>>('emailInput');
+
+  // LocalStorage key for storing last login email
+  private readonly LAST_EMAIL_KEY = 'cashier_last_email';
+
   protected readonly emailForm = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email])
   });
@@ -49,9 +55,29 @@ export class CashierLoginComponent implements OnInit {
         }, 0);
       }
     });
+
+    // Focus and select email input when email form is shown
+    effect(() => {
+      if (!this.otpSent() && !this.isLoading() && this.emailInput()) {
+        // Use setTimeout to ensure the input is rendered
+        setTimeout(() => {
+          const input = this.emailInput()?.nativeElement;
+          if (input) {
+            input.focus();
+            input.select();
+          }
+        }, 0);
+      }
+    });
   }
 
   ngOnInit(): void {
+    // Load last login email from localStorage
+    const lastEmail = localStorage.getItem(this.LAST_EMAIL_KEY);
+    if (lastEmail) {
+      this.emailForm.patchValue({ email: lastEmail });
+    }
+
     // Check if email and OTP are provided via query parameters (from email link)
     this.route.queryParams.subscribe(params => {
       const emailParam = params['email'];
@@ -90,6 +116,7 @@ export class CashierLoginComponent implements OnInit {
         // Store user profile
         if (response.body) {
           this.profileService.setProfile(response.body);
+          localStorage.setItem(this.LAST_EMAIL_KEY, email);
         }
 
         void this.router.navigate(['/cashier/transactions'], {
@@ -174,6 +201,7 @@ export class CashierLoginComponent implements OnInit {
         // Store user profile
         if (response.body) {
           this.profileService.setProfile(response.body);
+          localStorage.setItem(this.LAST_EMAIL_KEY, emailValue);
         }
 
         void this.router.navigate(['/cashier/transactions'], {

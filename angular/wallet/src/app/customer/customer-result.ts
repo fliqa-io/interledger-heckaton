@@ -35,7 +35,7 @@ export class CustomerResultComponent implements OnInit {
       }
     } else {
       // If no state, redirect to login
-      this.router.navigate(['/customer/login']);
+      this.router.navigate(['/customer/transaction']);
     }
   }
 
@@ -48,11 +48,7 @@ export class CustomerResultComponent implements OnInit {
     return result;
   }
 
-  protected makeAnotherPayment(): void {
-    this.router.navigate(['/customer/login']);
-  }
-
   protected goHome(): void {
-    this.router.navigate(['/customer/login']);
+    this.router.navigate(['/customer/transactions']);
   }
 }
