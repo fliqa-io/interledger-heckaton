@@ -1,5 +1,5 @@
 import { Component, signal, inject, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ChangeDetectionStrategy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
@@ -14,8 +14,10 @@ import { WalletStorageService, type WalletInfo } from '../services/wallet-storag
 })
 export class CustomerLoginComponent implements OnInit {
   private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
   private readonly http = inject(HttpClient);
   private readonly walletStorage = inject(WalletStorageService);
+  private returnUrl: string | null = null;
 
   protected readonly errorMessage = signal<string>('');
   protected readonly isLoading = signal(false);
@@ -29,6 +31,9 @@ export class CustomerLoginComponent implements OnInit {
   });
 
   ngOnInit(): void {
+    // Check for returnUrl query parameter
+    this.returnUrl = this.route.snapshot.queryParamMap.get('returnUrl');
+
     // Load recent wallet addresses
     const addresses = this.walletStorage.getWalletAddresses();
     this.recentAddresses.set(addresses);
@@ -99,10 +104,14 @@ export class CustomerLoginComponent implements OnInit {
 
         console.log('Wallet validated:', walletInfo);
 
-        // Navigate to transactions
-        void this.router.navigate(['/customer/transactions'], {
-          state: { walletServer, walletName }
-        });
+        // Navigate to returnUrl if present, otherwise go to transactions
+        if (this.returnUrl) {
+          void this.router.navigateByUrl(this.returnUrl);
+        } else {
+          void this.router.navigate(['/customer/transactions'], {
+            state: { walletServer, walletName }
+          });
+        }
       },
       error: (error) => {
         this.isLoading.set(false);

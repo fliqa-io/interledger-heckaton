@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
+import {WalletInfo} from "./wallet-storage.service";
 
 export interface CashierProfile {
   email: string;
   name: string;
   description: string;
-  paymentPointer: string;
+  walletData: WalletInfo;
 }
 
 @Injectable({

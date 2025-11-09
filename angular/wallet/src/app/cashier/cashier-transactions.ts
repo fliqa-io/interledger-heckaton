@@ -31,7 +31,7 @@ export class CashierTransactionsComponent implements OnInit {
       this.cashierEmail.set(profile.email);
       this.cashierName.set(profile.name);
       this.cashierDescription.set(profile.description);
-      this.walletAddress.set(profile.paymentPointer);
+      this.walletAddress.set(profile.walletData?.address);
 
       this.loadTransactions();
     } else {

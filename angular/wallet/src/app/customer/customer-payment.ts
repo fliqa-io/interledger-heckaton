@@ -47,33 +47,23 @@ export class CustomerPaymentComponent implements OnInit {
 
     this.paymentId.set(paymentIdParam);
 
-    // Try to get wallet info from navigation state first
-    const navigation = this.router.getCurrentNavigation();
-    const state = navigation?.extras?.state || history.state;
-
+    // Check if customer wallet is present
     const walletInfo = this.walletStorage.getWalletInfo();
 
-    this.walletServer.set(<string>walletInfo?.address);
-    this.walletName.set(<string>walletInfo?.publicName);
-
-    if (state?.['walletServer'] && state?.['walletName']) {
-
-
-      this.loadPaymentDetails(paymentIdParam);
-    } else {
-      // Try to get wallet info from storage (last used wallet)
-      const lastWallet = this.walletStorage.getLastWalletAddress();
-      if (lastWallet) {
-        // this.walletServer.set(lastWallet.server);
-        // this.walletName.set(lastWallet.name);
-        this.loadPaymentDetails(paymentIdParam);
-      } else {
-        // No wallet info available, user needs to enter it
-        this.needsWalletInfo.set(true);
-        // Load payment details anyway to show the amount
-        this.loadPaymentDetails(paymentIdParam);
-      }
+    if (!walletInfo) {
+      // No wallet info, redirect to login with payment ID as query parameter
+      void this.router.navigate(['/customer/login'], {
+        queryParams: { returnUrl: `/customer/payment/${paymentIdParam}` }
+      });
+      return;
     }
+
+    // Set wallet info from storage
+    this.walletServer.set(walletInfo.address);
+    this.walletName.set(walletInfo.publicName);
+
+    // Load payment details
+    this.loadPaymentDetails(paymentIdParam);
   }
 
   private loadPaymentDetails(paymentId: string): void {
