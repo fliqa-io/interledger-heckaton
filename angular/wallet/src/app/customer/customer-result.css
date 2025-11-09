@@ -17,7 +17,8 @@
 }
 
 .success-content,
-.failure-content {
+.failure-content,
+.processing-content {
   text-align: center;
 }
 
@@ -230,6 +231,38 @@ h1 {
 .primary-button:active,
 .secondary-button:active {
   transform: translateY(0);
+}
+
+.spinner {
+  width: 60px;
+  height: 60px;
+  margin: 0 auto 30px;
+  border: 6px solid #e2e8f0;
+  border-top-color: #667eea;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.error-message-box {
+  margin-bottom: 20px;
+  padding: 15px 20px;
+  background: #fff5f5;
+  border-radius: 10px;
+  border: 2px solid #fc8181;
+}
+
+.error-message-box p {
+  margin: 0;
+  color: #c53030;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 1.5;
 }
 
 @media (max-width: 600px) {

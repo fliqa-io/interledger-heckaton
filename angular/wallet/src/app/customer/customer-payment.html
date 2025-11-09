@@ -1,102 +1,105 @@
 <div class="payment-container">
-  <div class="payment-card">
-    <div class="header">
-      <h1>Payment Details</h1>
+    <div class="payment-card">
+        <div class="header">
+            <h1>Payment Details</h1>
+        </div>
+        <div class="content">
+
+            <div class="merchant-info">
+                <div class="merchant-label">Merchant</div>
+                <div class="merchant-name">{{ merchantId() }}</div>
+            </div>
+
+            @if (errorMessage()) {
+                <div class="error-message">
+                    <div class="error-icon">⚠️</div>
+                    <p>{{ errorMessage() }}</p>
+                </div>
+            } @else {
+
+
+                <div class="amount-section">
+                    <div class="amount-label">Amount to Pay</div>
+                    <div class="amount-display">
+                        <span class="amount">{{ amount() | number:'1.2-2' }}</span>
+                        <span class="currency">{{ currency() }}</span>
+                    </div>
+                </div>
+            }
+
+            @if (isLoading()) {
+                <div class="loading-message">
+                    <div class="spinner"></div>
+                    <p>Loading payment details...</p>
+                </div>
+            }
+
+            @if (needsWalletInfo()) {
+                <div class="wallet-info-missing">
+                    <div class="warning-icon">⚠️</div>
+                    <p class="warning-title">Wallet Required</p>
+                    <p class="warning-text">Please login with your wallet address to proceed with this payment</p>
+                    <button type="button" class="login-button" (click)="proceedWithLogin()">
+                        Login with Wallet
+                    </button>
+                </div>
+            } @else {
+                <div class="wallet-info">
+                    <div class="wallet-label">From Wallet</div>
+                    <div class="wallet-field">
+                        <span class="wallet-server">{{ walletServer() }}</span>
+                    </div>
+                    <div class="wallet-field">
+                        <span class="wallet-name">{{ walletName() }}</span>
+                    </div>
+                </div>
+
+                @if (!errorMessage()) {
+
+                    <div class="wallet-info">
+                        <div class="wallet-label">To Wallet</div>
+                        <div class="wallet-field">
+                            <span class="wallet-server">{{ walletReceiverServer() }}</span>
+                        </div>
+                        <div class="wallet-field">
+                            <span class="wallet-name">{{ walletReceiverName() }}</span>
+                        </div>
+                    </div>
+                }
+            }
+
+            @if (isProcessing()) {
+                <div class="processing-message">
+                    <div class="spinner"></div>
+                    <p>Processing payment...</p>
+                </div>
+            }
+
+            <div class="actions">
+                <button
+                        type="button"
+                        class="cancel-button"
+                        (click)="cancelPayment()"
+                        [disabled]="isProcessing()"
+                >
+                    Cancel
+                </button>
+
+                @if (!errorMessage()) {
+                    <button
+                            type="button"
+                            class="confirm-button"
+                            (click)="confirmPayment()"
+                            [disabled]="isProcessing() || needsWalletInfo()"
+                    >
+                        @if (isProcessing()) {
+                            <span>Processing...</span>
+                        } @else {
+                            <span>Confirm Payment</span>
+                        }
+                    </button>
+                }
+            </div>
+        </div>
     </div>
-
-    <div class="content">
-      <div class="merchant-info">
-        <div class="merchant-label">Merchant</div>
-        <div class="merchant-name">{{ merchantId() }}</div>
-      </div>
-
-      <div class="amount-section">
-        <div class="amount-label">Amount to Pay</div>
-        <div class="amount-display">
-          <span class="amount">{{ amount() }}</span>
-          <span class="currency">{{ currency() }}</span>
-        </div>
-      </div>
-
-      @if (needsWalletInfo()) {
-        <div class="wallet-info-missing">
-          <div class="warning-icon">⚠️</div>
-          <p class="warning-title">Wallet Required</p>
-          <p class="warning-text">Please login with your wallet address to proceed with this payment</p>
-          <button type="button" class="login-button" (click)="proceedWithLogin()">
-            Login with Wallet
-          </button>
-        </div>
-      } @else {
-        <div class="wallet-info">
-          <div class="wallet-label">From Wallet</div>
-          <div class="wallet-field">
-            <span class="field-label">Server:</span>
-            <span class="wallet-server">{{ walletServer() }}</span>
-          </div>
-          <div class="wallet-field">
-            <span class="field-label">Address:</span>
-            <span class="wallet-name">{{ walletName() }}</span>
-          </div>
-        </div>
-
-          <div class="wallet-info">
-              <div class="wallet-label">To Wallet</div>
-              <div class="wallet-field">
-                  <span class="field-label">Server:</span>
-                  <span class="wallet-server">{{ walletServer() }}</span>
-              </div>
-              <div class="wallet-field">
-                  <span class="field-label">Address:</span>
-                  <span class="wallet-name">{{ walletName() }}</span>
-              </div>
-          </div>
-      }
-
-      <!--<div class="payment-details">
-        <div class="detail-row">
-          <span class="detail-label">Payment Method</span>
-          <span class="detail-value">Interledger</span>
-        </div>
-        <div class="detail-row">
-          <span class="detail-label">Transaction Fee</span>
-          <span class="detail-value">0.00 EUR</span>
-        </div>
-        <div class="detail-row total">
-          <span class="detail-label">Total</span>
-          <span class="detail-value">{{ amount() }} {{currency()}}</span>
-        </div>
-      </div>-->
-
-      @if (isProcessing()) {
-        <div class="processing-message">
-          <div class="spinner"></div>
-          <p>Processing payment...</p>
-        </div>
-      }
-
-      <div class="actions">
-        <button
-          type="button"
-          class="cancel-button"
-          (click)="cancelPayment()"
-          [disabled]="isProcessing()"
-        >
-          Cancel
-        </button>
-        <button
-          type="button"
-          class="confirm-button"
-          (click)="confirmPayment()"
-          [disabled]="isProcessing() || needsWalletInfo()"
-        >
-          @if (isProcessing()) {
-            <span>Processing...</span>
-          } @else {
-            <span>Confirm Payment</span>
-          }
-        </button>
-      </div>
-    </div>
-  </div>
 </div>

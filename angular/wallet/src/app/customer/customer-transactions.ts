@@ -31,21 +31,30 @@ export class CustomerTransactionsComponent implements OnInit {
   protected readonly transactions = signal<Transaction[]>([]);
 
   ngOnInit(): void {
-    const navigation = this.router.getCurrentNavigation();
-    const state = navigation?.extras?.state || history.state;
+    // Try to get wallet info from storage first
+    const walletInfo = this.walletStorage.getWalletInfo();
 
-    if (state?.['walletServer'] && state?.['walletName']) {
-
-      const walletInfo = this.walletStorage.getWalletInfo();
-
-      this.walletAddress.set(<string>walletInfo?.address);
-      this.walletName.set(<string>walletInfo?.publicName);
-      this.walletCurrency.set(<string>walletInfo?.assetCode);
+    if (walletInfo) {
+      // Use wallet info from storage
+      this.walletAddress.set(walletInfo.address);
+      this.walletName.set(walletInfo.publicName);
+      this.walletCurrency.set(walletInfo.assetCode);
 
       this.loadTransactions();
     } else {
-      // If no wallet info, redirect to login
-      this.router.navigate(['/customer/login']);
+      // Fallback: check navigation state
+      const navigation = this.router.getCurrentNavigation();
+      const state = navigation?.extras?.state || history.state;
+
+      if (state?.['walletServer'] && state?.['walletName']) {
+        this.walletAddress.set(state['walletServer']);
+        this.walletName.set(state['walletName']);
+
+        this.loadTransactions();
+      } else {
+        // If no wallet info in storage or state, redirect to login
+        void this.router.navigate(['/customer/login']);
+      }
     }
   }
 

@@ -241,6 +241,45 @@
     font-size: 14px;
 }
 
+.error-message {
+    margin-bottom: 25px;
+    padding: 20px;
+    background: #fff5f5;
+    border-radius: 12px;
+    border: 2px solid #fc8181;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.error-icon {
+    font-size: 24px;
+    flex-shrink: 0;
+}
+
+.error-message p {
+    margin: 0;
+    color: #c53030;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.loading-message {
+    text-align: center;
+    padding: 20px;
+    margin-bottom: 20px;
+    background: #f7fafc;
+    border-radius: 12px;
+    border: 2px solid #e2e8f0;
+}
+
+.loading-message p {
+    margin: 0;
+    color: #4a5568;
+    font-weight: 500;
+}
+
 .processing-message {
     text-align: center;
     padding: 20px;

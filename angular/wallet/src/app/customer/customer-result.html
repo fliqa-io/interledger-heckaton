@@ -1,6 +1,12 @@
 <div class="result-container">
   <div class="result-card">
-    @if (success()) {
+    @if (isProcessing()) {
+      <div class="processing-content">
+        <div class="spinner"></div>
+        <h1>Finalizing Payment...</h1>
+        <p class="message">Please wait while we complete your transaction</p>
+      </div>
+    } @else if (success()) {
       <div class="success-content">
         <div class="icon-container success">
           <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -54,20 +60,11 @@
         <h1>Payment Failed</h1>
         <p class="message">We couldn't process your payment</p>
 
-        <div class="amount-display">
-          <span class="currency">$</span>
-          <span class="amount">{{ amount() }}</span>
-        </div>
-
-        <div class="error-details">
-          <h3>Possible reasons:</h3>
-          <ul>
-            <li>Insufficient balance in your wallet</li>
-            <li>Network connectivity issues</li>
-            <li>Invalid wallet address</li>
-            <li>Transaction timeout</li>
-          </ul>
-        </div>
+        @if (errorMessage()) {
+          <div class="error-message-box">
+            <p>{{ errorMessage() }}</p>
+          </div>
+        }
 
         <div class="actions">
           <button type="button" class="secondary-button" (click)="goHome()">

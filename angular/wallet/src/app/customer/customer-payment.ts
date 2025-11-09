@@ -4,14 +4,7 @@ import { ChangeDetectionStrategy } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { WalletStorageService } from '../services/wallet-storage.service';
-
-interface PaymentDetails {
-  id: string;
-  amount: number;
-  currency: string;
-  cashier: string;
-  created: string;
-}
+import { CustomerPaymentService, type CustomerPayment } from '../services/customer-payment.service';
 
 @Component({
   selector: 'app-customer-payment',
@@ -25,10 +18,15 @@ export class CustomerPaymentComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly http = inject(HttpClient);
   private readonly walletStorage = inject(WalletStorageService);
+  private readonly paymentService = inject(CustomerPaymentService);
 
   protected readonly paymentId = signal<string>('');
   protected readonly walletServer = signal<string>('');
   protected readonly walletName = signal<string>('');
+
+  protected readonly walletReceiverServer = signal<string>('');
+  protected readonly walletReceiverName = signal<string>('');
+
   protected readonly amount = signal<string>('0.00');
   protected readonly currency = signal<string>('EUR');
   protected readonly merchantId = signal<string>('FLIQA_WALLET');
@@ -53,16 +51,21 @@ export class CustomerPaymentComponent implements OnInit {
     const navigation = this.router.getCurrentNavigation();
     const state = navigation?.extras?.state || history.state;
 
+    const walletInfo = this.walletStorage.getWalletInfo();
+
+    this.walletServer.set(<string>walletInfo?.address);
+    this.walletName.set(<string>walletInfo?.publicName);
+
     if (state?.['walletServer'] && state?.['walletName']) {
-      this.walletServer.set(state['walletServer']);
-      this.walletName.set(state['walletName']);
+
+
       this.loadPaymentDetails(paymentIdParam);
     } else {
       // Try to get wallet info from storage (last used wallet)
       const lastWallet = this.walletStorage.getLastWalletAddress();
       if (lastWallet) {
-        this.walletServer.set(lastWallet.server);
-        this.walletName.set(lastWallet.name);
+        // this.walletServer.set(lastWallet.server);
+        // this.walletName.set(lastWallet.name);
         this.loadPaymentDetails(paymentIdParam);
       } else {
         // No wallet info available, user needs to enter it
@@ -78,25 +81,33 @@ export class CustomerPaymentComponent implements OnInit {
     this.errorMessage.set('');
 
     // Load payment details from backend
-    this.http.get<PaymentDetails>(`/api/payment/${paymentId}`, {
+    this.http.get<CustomerPayment>(`/api/payment/${paymentId}`, {
       headers: { Accept: 'application/json' }
     }).subscribe({
       next: (payment) => {
         this.isLoading.set(false);
 
-        // Store payment details in localStorage
-        localStorage.setItem('customerCurrentPayment', JSON.stringify(payment));
+        // Store payment details using service
+        this.paymentService.setPayment(payment);
 
         // Set component state from payment details
         this.amount.set(payment.amount.toString());
         this.currency.set(payment.currency);
-        this.merchantId.set(payment.cashier);
+        this.merchantId.set(payment.walletData.publicName);
+        this.walletReceiverName.set(payment.walletData.publicName);
+        this.walletReceiverServer.set(payment.walletData.address);
 
-        console.log(`Loaded payment: ${payment.id}, Amount: ${payment.amount} ${payment.currency}, Cashier: ${payment.cashier}`);
+        console.log(`Loaded payment: ${payment.id}, Amount: ${payment.amount} ${payment.currency}, Merchant: ${payment.walletData.publicName}`);
       },
       error: (error) => {
         this.isLoading.set(false);
-        this.errorMessage.set(error.error?.message || 'Failed to load payment details. Please try again.');
+        if (error.status === 404) {
+          this.errorMessage.set('Payment not found. The payment may have expired or been cancelled.');
+        } else if (error.status >= 400 && error.status < 500) {
+          this.errorMessage.set(error.error?.message || 'Invalid payment. Please try again.');
+        } else {
+          this.errorMessage.set('Failed to load payment details. Please try again.');
+        }
         console.error('Failed to load payment details:', error);
       }
     });
@@ -111,21 +122,32 @@ export class CustomerPaymentComponent implements OnInit {
 
   protected confirmPayment(): void {
     this.isProcessing.set(true);
+    this.errorMessage.set('');
 
-    // TODO: Process actual payment via Interledger
-    setTimeout(() => {
-      this.isProcessing.set(false);
-      // Simulate success (could also simulate failure for testing)
-      const success = Math.random() > 0.1; // 90% success rate for demo
-      void this.router.navigate(['/customer/result'], {
-        state: {
-          success,
-          amount: this.amount(),
-          walletServer: this.walletServer(),
-          walletName: this.walletName()
+    // Construct wallet address
+    const walletAddress = <string>this.walletStorage.getWalletInfo()?.address;
+    const paymentId = this.paymentId();
+
+    // Process payment via API
+    this.http.post(`/api/pay/${paymentId}?customer=${encodeURIComponent(walletAddress)}`, {}, {
+      responseType: 'text'
+    }).subscribe({
+      next: (redirectUrl: string) => {
+        this.isProcessing.set(false);
+        // Redirect user to the URL returned by the API
+        window.location.href = redirectUrl;
+      },
+      error: (error) => {
+        this.isProcessing.set(false);
+        // Payment failed - show error message
+        if (error.status >= 400 && error.status < 500) {
+          this.errorMessage.set(error.error?.message || 'Payment failed. Please try again.');
+        } else {
+          this.errorMessage.set('Payment failed. Please try again.');
         }
-      });
-    }, 2000);
+        console.error('Payment failed:', error);
+      }
+    });
   }
 
   protected cancelPayment(): void {
