@@ -1,5 +1,5 @@
 package io.fliqa.hackaton.infrastructure.web.dto;
 
 public enum PaymentStatus {
-    Processing, Success
+    Processing, Success, Pending, Failure
 }

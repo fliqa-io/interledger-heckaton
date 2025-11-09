@@ -62,10 +62,14 @@ public class Payment implements Serializable {
     @JsonProperty("status")
     @Transient
     public PaymentStatus getPaymentStatus() {
-        if(finalizedPayment != null) {
+        if (finalizedPayment != null) {
             return PaymentStatus.Success;
         }
 
-        return PaymentStatus.Processing;
+        if (outgoingPayment != null) {
+            return PaymentStatus.Processing;
+        }
+
+        return PaymentStatus.Pending;
     }
 }
