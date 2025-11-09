@@ -25,6 +25,8 @@ export class CashierTransactionsComponent implements OnInit {
 
   protected readonly cashierEmail = signal<string>('');
   protected readonly cashierName = signal<string>('');
+  protected readonly cashierDescription = signal<string>('');
+  protected readonly walletAddress = signal<string>('');
   protected readonly transactions = signal<Transaction[]>([]);
 
   ngOnInit(): void {
@@ -34,6 +36,9 @@ export class CashierTransactionsComponent implements OnInit {
     if (profile) {
       this.cashierEmail.set(profile.email);
       this.cashierName.set(profile.name);
+      this.cashierDescription.set(profile.description);
+      this.walletAddress.set(profile.paymentPointer);
+
       this.loadTransactions();
     } else {
       // Fallback to navigation state (for backwards compatibility)

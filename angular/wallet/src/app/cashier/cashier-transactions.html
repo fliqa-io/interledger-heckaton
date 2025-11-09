@@ -1,61 +1,58 @@
 <div class="transactions-container">
-  <div class="transactions-card">
-    <div class="header">
-      <div class="header-content">
-        <h1>Cashier Dashboard</h1>
-        <button type="button" class="logout-button" (click)="logout()">Logout</button>
-      </div>
-    </div>
-
-    <div class="content">
-      <div class="cashier-info">
-        <div class="cashier-label">Cashier Account</div>
-        <div class="cashier-details">
-          <div class="cashier-name">{{ cashierName() }}</div>
-          <div class="cashier-email">{{ cashierEmail() }}</div>
+    <div class="transactions-card">
+        <div class="header">
+            <div class="header-content">
+                <h1>{{ cashierName() }} / {{ cashierDescription() }}</h1>
+                <button type="button" class="logout-button" (click)="logout()">Logout</button>
+            </div>
         </div>
-      </div>
 
-      <button type="button" class="create-button" (click)="createPayment()">
-        <svg class="qr-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect x="3" y="3" width="8" height="8" rx="1" stroke="currentColor" stroke-width="2"/>
-          <rect x="13" y="3" width="8" height="8" rx="1" stroke="currentColor" stroke-width="2"/>
-          <rect x="3" y="13" width="8" height="8" rx="1" stroke="currentColor" stroke-width="2"/>
-          <rect x="13" y="13" width="8" height="8" rx="1" stroke="currentColor" stroke-width="2"/>
-        </svg>
-        Create New Payment
-      </button>
+        <div class="content">
+            <div class="cashier-info">
+                <div class="cashier-email">{{ cashierEmail() }}</div>
+                <div class="cashier-address">{{ walletAddress() }}</div>
+            </div>
 
-      <div class="transactions-section">
-        <h2>Recent Transactions</h2>
+            <button type="button" class="create-button" (click)="createPayment()">
+                <svg class="qr-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="3" y="3" width="8" height="8" rx="1" stroke="currentColor" stroke-width="2"/>
+                    <rect x="13" y="3" width="8" height="8" rx="1" stroke="currentColor" stroke-width="2"/>
+                    <rect x="3" y="13" width="8" height="8" rx="1" stroke="currentColor" stroke-width="2"/>
+                    <rect x="13" y="13" width="8" height="8" rx="1" stroke="currentColor" stroke-width="2"/>
+                </svg>
+                Create New Payment
+            </button>
 
-        @if (transactions().length === 0) {
-          <div class="empty-state">
-            <p>No transactions yet</p>
-            <p class="empty-hint">Use "Create New Payment" to start accepting payments</p>
-          </div>
-        } @else {
-          <div class="transactions-list">
-            @for (transaction of transactions(); track transaction.id) {
-              <div class="transaction-item">
-                <div class="transaction-main">
-                  <div class="transaction-info">
-                    <div class="transaction-customer">{{ transaction.customer }}</div>
-                    <div class="transaction-date">{{ transaction.date | date:'MMM d, y h:mm a' }}</div>
-                  </div>
-                  <div class="transaction-amount-status">
-                    <div class="transaction-amount">${{ transaction.amount }}</div>
-                    <div class="transaction-status" [class]="getStatusClass(transaction.status)">
-                      {{ transaction.status }}
+            <div class="transactions-section">
+                <h2>Recent Transactions</h2>
+
+                @if (transactions().length === 0) {
+                    <div class="empty-state">
+                        <p>No transactions yet</p>
+                        <p class="empty-hint">Use "Create New Payment" to start accepting payments</p>
                     </div>
-                  </div>
-                </div>
-                <div class="transaction-id">ID: {{ transaction.id }}</div>
-              </div>
-            }
-          </div>
-        }
-      </div>
+                } @else {
+                    <div class="transactions-list">
+                        @for (transaction of transactions(); track transaction.id) {
+                            <div class="transaction-item">
+                                <div class="transaction-main">
+                                    <div class="transaction-info">
+                                        <div class="transaction-customer">{{ transaction.customer }}</div>
+                                        <div class="transaction-date">{{ transaction.date | date:'MMM d, y h:mm a' }}</div>
+                                    </div>
+                                    <div class="transaction-amount-status">
+                                        <div class="transaction-amount">${{ transaction.amount }}</div>
+                                        <div class="transaction-status" [class]="getStatusClass(transaction.status)">
+                                            {{ transaction.status }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="transaction-id">ID: {{ transaction.id }}</div>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
     </div>
-  </div>
 </div>
