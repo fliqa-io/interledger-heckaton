@@ -4,9 +4,9 @@ A payment application demonstrating seamless merchant-to-customer transactions u
 
 ## Links
 
-- **Presentation**: [Add your presentation link here]
-- **Demo**: [Add live demo link if available]
+- **Presentation**: // TODO
 - **Repository**: https://github.com/fliqa-io/interledger-heckaton
+- **Java SDK**: https://github.com/fliqa-io/interledger
 
 ## How it works
 
@@ -66,7 +66,7 @@ Backend configuration can be modified in `java/src/main/resources/application.pr
 **As a Cashier:**
 1. Navigate to `http://localhost:4200/cashier/login`
 2. Enter your email and receive a 4-digit OTP
-3. Create a payment by entering the amount in EUR
+3. Create a payment by entering the amount (based on his wallet asset)
 4. Show the generated QR code to the customer
 5. Monitor payment status in real-time
 
@@ -80,26 +80,8 @@ Backend configuration can be modified in `java/src/main/resources/application.pr
 
 ## Team members
 
-- [Add team member names and GitHub profiles here]
-
-## Learnings
-
-[Add a paragraph about your learnings during this hackathon - e.g., insights about Interledger Protocol, challenges faced with Open Payments API, new technical skills acquired, etc.]
-
-## Achievements
-
-[Add a paragraph about the achievements during this hackathon you are most proud of - e.g., successfully implementing real-time payment tracking, creating a user-friendly QR code flow, integrating with Interledger test network, etc.]
-
-## What comes next?
-
-Future enhancements planned for this project include:
-
-- **Multi-currency Support**: Extend beyond EUR to support multiple fiat and digital currencies
-- **Production Readiness**: Implement proper security measures, error handling, and production-grade deployment
-- **Enhanced UX**: Add payment notifications, receipt generation, and improved transaction history filtering
-- **Wallet Integration**: Direct integration with various Interledger-compatible wallets
-- **Analytics Dashboard**: Provide merchants with sales analytics and reporting tools
-- **Mobile Apps**: Develop native iOS and Android applications for better mobile experience
+- Andrej Završnik [https://github.com/drejc]
+- Jurica Čavlek [https://github.com/gargameljura]
 
 ---
 
