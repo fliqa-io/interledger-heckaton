@@ -40,7 +40,7 @@
                 <div class="transaction-main">
                   <div class="transaction-info">
                     <div class="transaction-merchant">{{ transaction.merchant }}</div>
-                    <div class="transaction-date">{{ transaction.date | date:'MMM d, y' }}</div>
+                    <div class="transaction-date">{{ transaction.date | date:'MMM d, y, HH:mm' }}</div>
                   </div>
                   <div class="transaction-amount-status">
                     <div class="transaction-amount">${{ transaction.amount }}</div>
