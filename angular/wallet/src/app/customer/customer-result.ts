@@ -22,8 +22,6 @@ export class CustomerResultComponent implements OnInit {
   protected readonly amount = signal<string>('0.00');
   protected readonly currency = signal<string>('EUR');
 
-  protected readonly walletServer = signal<string>('');
-  protected readonly walletName = signal<string>('');
   protected readonly transactionId = signal<string>('');
   protected readonly isProcessing = signal<boolean>(false);
   protected readonly errorMessage = signal<string>('');
@@ -46,8 +44,6 @@ export class CustomerResultComponent implements OnInit {
       if (state?.['success'] !== undefined) {
         this.success.set(state['success']);
         this.amount.set(state['amount'] || '0.00');
-        this.walletServer.set(state['walletServer'] || '');
-        this.walletName.set(state['walletName'] || '');
 
         if (state['success']) {
           // Generate mock transaction ID

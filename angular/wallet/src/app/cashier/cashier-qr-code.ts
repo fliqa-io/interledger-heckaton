@@ -1,9 +1,18 @@
-import { Component, signal, inject, OnInit } from '@angular/core';
+import { Component, signal, inject, OnInit, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ChangeDetectionStrategy } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { CashierTransactionsService } from '../services/cashier-transactions.service';
+
+interface PaymentStatus {
+  id: string;
+  amount: number;
+  currency: string;
+  status: 'Pending' | 'Processing' | 'Success' | 'Failed' | null;
+  created: string;
+}
 
 @Component({
   selector: 'app-cashier-qr-code',
@@ -12,11 +21,13 @@ import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
   styleUrl: './cashier-qr-code.css',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CashierQRCodeComponent implements OnInit {
+export class CashierQRCodeComponent implements OnInit, OnDestroy {
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
   private readonly http = inject(HttpClient);
   private readonly sanitizer = inject(DomSanitizer);
+  private readonly transactionsService = inject(CashierTransactionsService);
+  private statusPollingInterval: number | null = null;
 
   protected readonly amount = signal<string>('0.00');
   protected readonly currency = signal<string>('EUR');
@@ -25,6 +36,7 @@ export class CashierQRCodeComponent implements OnInit {
   protected readonly paymentUrl = signal<string>('');
   protected readonly isLoading = signal<boolean>(false);
   protected readonly errorMessage = signal<string>('');
+  protected readonly paymentStatus = signal<'Pending' | 'Processing' | 'Success' | 'Failed' | null>(null);
 
   ngOnInit(): void {
     // Get payment ID from route parameter
@@ -53,6 +65,69 @@ export class CashierQRCodeComponent implements OnInit {
     // Fetch QR code image and payment URL from API
     this.loadQRCode(paymentId);
     this.loadPaymentUrl(paymentId);
+
+    // Start polling for payment status every 3 seconds
+    this.startStatusPolling(paymentId);
+  }
+
+  ngOnDestroy(): void {
+    // Clean up polling interval when component is destroyed
+    this.stopStatusPolling();
+  }
+
+  private startStatusPolling(paymentId: string): void {
+    // Poll immediately
+    this.checkPaymentStatus(paymentId);
+
+    // Then poll every 3 seconds
+    this.statusPollingInterval = window.setInterval(() => {
+      this.checkPaymentStatus(paymentId);
+    }, 3000);
+  }
+
+  private stopStatusPolling(): void {
+    if (this.statusPollingInterval !== null) {
+      clearInterval(this.statusPollingInterval);
+      this.statusPollingInterval = null;
+    }
+  }
+
+  private checkPaymentStatus(paymentId: string): void {
+    this.http.get<PaymentStatus>(`/api/payment/${paymentId}`, {
+      headers: { 'Accept': 'application/json' }
+    }).subscribe({
+      next: (payment) => {
+        const status = payment.status;
+
+        // Update payment status
+        this.paymentStatus.set(status);
+
+        // Stop polling if payment is completed or failed
+        if (status === 'Success' || status === 'Failed') {
+          this.stopStatusPolling();
+
+          // Store completed transaction
+          if (status === 'Success') {
+            this.storeCompletedTransaction(payment);
+          }
+        }
+      },
+      error: (error) => {
+        console.error('Failed to check payment status:', error);
+        // Don't stop polling on error, continue checking
+      }
+    });
+  }
+
+  private storeCompletedTransaction(payment: PaymentStatus): void {
+    this.transactionsService.addTransaction({
+      id: payment.id,
+      amount: payment.amount.toString(),
+      currency: payment.currency,
+      customer: `Payment #${payment.id.substring(0, 8)}`,
+      status: 'completed',
+      date: new Date()
+    });
   }
 
   private loadQRCode(paymentId: string): void {

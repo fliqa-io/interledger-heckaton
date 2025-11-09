@@ -38,10 +38,10 @@
                                 <div class="transaction-main">
                                     <div class="transaction-info">
                                         <div class="transaction-customer">{{ transaction.customer }}</div>
-                                        <div class="transaction-date">{{ transaction.date | date:'MMM d, y h:mm a' }}</div>
+                                        <div class="transaction-date">{{ transaction.date | date:'MMM d, y hh:mm' }}</div>
                                     </div>
                                     <div class="transaction-amount-status">
-                                        <div class="transaction-amount">${{ transaction.amount }}</div>
+                                        <div class="transaction-amount">{{ transaction.amount }} {{ transaction.currency }}</div>
                                         <div class="transaction-status" [class]="getStatusClass(transaction.status)">
                                             {{ transaction.status }}
                                         </div>

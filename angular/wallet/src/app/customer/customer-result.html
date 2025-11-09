@@ -1,77 +1,70 @@
 <div class="result-container">
-  <div class="result-card">
-    @if (isProcessing()) {
-      <div class="processing-content">
-        <div class="spinner"></div>
-        <h1>Finalizing Payment...</h1>
-        <p class="message">Please wait while we complete your transaction</p>
-      </div>
-    } @else if (success()) {
-      <div class="success-content">
-        <div class="icon-container success">
-          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
-            <path d="M8 12.5L10.5 15L16 9.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </div>
+    <div class="result-card">
+        @if (isProcessing()) {
+            <div class="processing-content">
+                <div class="spinner"></div>
+                <h1>Finalizing Payment...</h1>
+                <p class="message">Please wait while we complete your transaction</p>
+            </div>
+        } @else if (success()) {
+            <div class="success-content">
+                <div class="icon-container success">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                        <path d="M8 12.5L10.5 15L16 9.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                              stroke-linejoin="round"/>
+                    </svg>
+                </div>
 
-        <h1>Payment Successful!</h1>
-        <p class="message">Your payment has been processed successfully</p>
+                <h1>Payment Successful!</h1>
+                <p class="message">Your payment has been processed successfully</p>
 
-        <div class="amount-display">
-          <span class="amount">{{ amount() }}</span>
-          <span class="currency">{{ currency() }}</span>
-        </div>
+                <div class="amount-display">
+                    <span class="amount">{{ amount() }}</span>
+                    <span class="currency">{{ currency() }}</span>
+                </div>
 
-        <div class="details">
-          <div class="detail-row">
-            <span class="detail-label">Transaction ID</span>
-            <span class="detail-value transaction-id">{{ transactionId() }}</span>
-          </div>
-          <div class="detail-row">
-            <span class="detail-label">Wallet Server</span>
-            <span class="detail-value wallet">{{ walletServer() }}</span>
-          </div>
-          <div class="detail-row">
-            <span class="detail-label">Wallet Address</span>
-            <span class="detail-value wallet">{{ walletName() }}</span>
-          </div>
-          <div class="detail-row">
-            <span class="detail-label">Status</span>
-            <span class="detail-value status-success">Completed</span>
-          </div>
-        </div>
+                <div class="details">
+                    <div class="detail-row">
+                        <span class="detail-label">Transaction ID</span>
+                        <span class="detail-value transaction-id">{{ transactionId() }}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Status</span>
+                        <span class="detail-value status-success">Completed</span>
+                    </div>
+                </div>
 
-        <div class="actions">
-          <button type="button" class="secondary-button" (click)="goHome()">
-            Done
-          </button>
-        </div>
-      </div>
-    } @else {
-      <div class="failure-content">
-        <div class="icon-container failure">
-          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
-            <path d="M15 9L9 15M9 9L15 15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-          </svg>
-        </div>
+                <div class="actions">
+                    <button type="button" class="secondary-button" (click)="goHome()">
+                        Done
+                    </button>
+                </div>
+            </div>
+        } @else {
+            <div class="failure-content">
+                <div class="icon-container failure">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                        <path d="M15 9L9 15M9 9L15 15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </div>
 
-        <h1>Payment Failed</h1>
-        <p class="message">We couldn't process your payment</p>
+                <h1>Payment Failed</h1>
+                <p class="message">We couldn't process your payment</p>
 
-        @if (errorMessage()) {
-          <div class="error-message-box">
-            <p>{{ errorMessage() }}</p>
-          </div>
+                @if (errorMessage()) {
+                    <div class="error-message-box">
+                        <p>{{ errorMessage() }}</p>
+                    </div>
+                }
+
+                <div class="actions">
+                    <button type="button" class="secondary-button" (click)="goHome()">
+                        Cancel
+                    </button>
+                </div>
+            </div>
         }
-
-        <div class="actions">
-          <button type="button" class="secondary-button" (click)="goHome()">
-            Cancel
-          </button>
-        </div>
-      </div>
-    }
-  </div>
+    </div>
 </div>

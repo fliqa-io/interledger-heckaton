@@ -10,6 +10,20 @@
                 <div class="merchant-name">{{ merchantId() }}</div>
             </div>
 
+            @if (isLoading()) {
+                <div class="loading-message">
+                    <div class="spinner"></div>
+                    <p>Loading payment details...</p>
+                </div>
+            }
+
+            @if (isProcessing()) {
+                <div class="processing-message">
+                    <div class="spinner"></div>
+                    <p>Processing payment...</p>
+                </div>
+            }
+
             @if (errorMessage()) {
                 <div class="error-message">
                     <div class="error-icon">⚠️</div>
@@ -24,13 +38,6 @@
                         <span class="amount">{{ amount() | number:'1.2-2' }}</span>
                         <span class="currency">{{ currency() }}</span>
                     </div>
-                </div>
-            }
-
-            @if (isLoading()) {
-                <div class="loading-message">
-                    <div class="spinner"></div>
-                    <p>Loading payment details...</p>
                 </div>
             }
 
@@ -66,13 +73,6 @@
                         </div>
                     </div>
                 }
-            }
-
-            @if (isProcessing()) {
-                <div class="processing-message">
-                    <div class="spinner"></div>
-                    <p>Processing payment...</p>
-                </div>
             }
 
             <div class="actions">
