@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -42,18 +43,18 @@ public class Payment implements Serializable {
     WalletData walletData;
 
     @JsonIgnore
-    @Column(name = "outgoing_payment")
+    @Column(name = "outgoing_payment", length = 2048)
     String outgoingPayment;
 
     @JsonIgnore
-    @Column(name = "sender_wallet")
+    @Column(name = "sender_wallet", length = 2048)
     String senderWallet;
 
     @JsonIgnore
-    @Column(name = "quote")
+    @Column(name = "quote", length = 2048)
     String quote;
 
     @JsonIgnore
-    @Column(name = "finalized_payment")
+    @Column(name = "finalized_payment", length = 2048)
     String finalizedPayment;
 }

@@ -32,7 +32,7 @@ export interface PaymentHistoryEntry {
 export class CustomerPaymentService {
   private readonly STORAGE_KEY = 'customerCurrentPayment';
   private readonly HISTORY_KEY = 'customerPaymentHistory';
-  private readonly MAX_HISTORY = 20;
+  private readonly MAX_HISTORY = 5;
 
   setPayment(payment: CustomerPayment): void {
     localStorage.setItem(this.STORAGE_KEY, JSON.stringify(payment));

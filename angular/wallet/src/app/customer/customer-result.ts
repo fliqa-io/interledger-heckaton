@@ -20,6 +20,8 @@ export class CustomerResultComponent implements OnInit {
 
   protected readonly success = signal<boolean>(false);
   protected readonly amount = signal<string>('0.00');
+  protected readonly currency = signal<string>('EUR');
+
   protected readonly walletServer = signal<string>('');
   protected readonly walletName = signal<string>('');
   protected readonly transactionId = signal<string>('');
@@ -66,6 +68,7 @@ export class CustomerResultComponent implements OnInit {
     const payment = this.paymentService.getPayment();
     if (payment) {
       this.amount.set(payment.amount.toString());
+      this.currency.set(payment.currency.toString());
     }
 
     // Call API to finalize payment
