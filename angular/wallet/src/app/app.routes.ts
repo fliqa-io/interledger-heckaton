@@ -21,7 +21,7 @@ export const routes: Routes = [
     loadComponent: () => import('./cashier/cashier-amount').then(m => m.CashierAmountComponent)
   },
   {
-    path: 'cashier/qr-code',
+    path: 'cashier/qr-code/:paymentId',
     loadComponent: () => import('./cashier/cashier-qr-code').then(m => m.CashierQRCodeComponent)
   },
   {

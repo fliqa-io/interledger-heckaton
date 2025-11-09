@@ -129,13 +129,8 @@ export class CashierAmountComponent implements OnInit {
         // Store payment in localStorage
         localStorage.setItem('currentPayment', JSON.stringify(response));
 
-        // Navigate to QR code page with payment response
-        void this.router.navigate(['/cashier/qr-code'], {
-          state: {
-            amount: this.displayAmount(),
-            payment: response
-          }
-        });
+        // Navigate to QR code page with payment ID
+        void this.router.navigate(['/cashier/qr-code', response.id]);
       },
       error: (error) => {
         this.isLoading.set(false);
