@@ -61,7 +61,12 @@ public class PaymentService {
     }
 
     public Payment getById(@NotNull UUID id) {
+        log.info("Getting payment for {}", id);
+
         var result = repository.findByIdOptional(id).orElseThrow(NotFoundException::new);
+
+        log.info("Payment found for {}, cashier {}", id, result.getCashier());
+
         var cashier = cashierRepository
                 .findByIdOptional(result.getCashier())
                 .orElseThrow(NotFoundException::new);

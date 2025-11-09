@@ -42,6 +42,8 @@ class PaymentResourceTest {
                         hasProperty("currency", is("EUR")))
                 );
 
+        System.out.println(result.getId());
+
         var createdLink = given()
                 .when()
                 .accept(ContentType.TEXT)
@@ -86,7 +88,7 @@ class PaymentResourceTest {
         var result = response.asByteArray();
 
         assertThat(result, notNullValue());
-//        writeImage(result);
+        writeImage(result);
         
         var expected = readImage(PaymentResourceTest.class.getResourceAsStream("/result.png"));
 

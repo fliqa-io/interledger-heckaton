@@ -5,6 +5,7 @@
 -- insert into myentity (id, field) values(3, 'field-3');
 -- alter sequence myentity_seq restart with 4;
 
-insert into user_profile (email, name, description, payment_pointer) values ('test@test.com', 'test', 'unit test profile', 'https://ilp.interledger-test.dev/fliqa-receiver');
+insert into user_profile (email, name, description, payment_pointer, otp) values ('test@test.com', 'test', 'unit test profile', 'https://ilp.interledger-test.dev/fliqa-receiver', '1234');
+insert into user_profile (email, name, description, payment_pointer, otp) values ('testko@test.com', 'test', 'unit test profile', 'https://ilp.interledger-test.dev/fliqa-receiver', '1234');
 
 insert into payment (id, amount, currency, cashier, created) values ('22138913-7bab-4255-8ea2-739355174c3b', '24.99', 'USD', 'test@test.com', '2025-11-08T13:24:00.00000Z');
