@@ -1,6 +1,6 @@
 package io.fliqa.hackaton.service;
 
-import io.fliqa.client.interledger.InterledgerApiClientImpl;
+import io.fliqa.client.interledger.InterledgerApiClient;
 import io.fliqa.client.interledger.model.WalletAddress;
 import io.fliqa.hackaton.infrastructure.web.dto.WalletData;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -9,7 +9,6 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.InternalServerErrorException;
 import lombok.extern.slf4j.Slf4j;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import java.nio.file.Files;
 import java.security.KeyFactory;
@@ -22,19 +21,17 @@ import java.util.stream.Collectors;
 @ApplicationScoped
 public class WalletService {
 
-    private final InterledgerApiClientFactory factory;
+    private final InterledgerApiClient client;
 
     @Inject
     public WalletService(
-            InterledgerApiClientFactory factory
+            InterledgerApiClient client
     ) {
-        this.factory = factory;
+        this.client = client;
     }
 
     public WalletData getWallet(@NotNull @NotEmpty String address) {
         var walletAddress = new WalletAddress(address);
-
-        var client = factory.createClient(walletAddress);
 
         try {
             log.info("Retrieving wallet data for address {}", address);
@@ -54,26 +51,5 @@ public class WalletService {
                     "Failed to retrieve wallet data for address " + address,
                     e);
         }
-    }
-
-    private PrivateKey privateKeyFromFile(String privateKeyFile) throws Exception {
-        if (!Files.exists(java.nio.file.Path.of(privateKeyFile))) {
-            log.error("Private key file does not exist: {}", privateKeyFile);
-            throw new RuntimeException("Private key file does not exist: " + privateKeyFile);
-        }
-
-        var privateKeyContents = Files
-                .lines(java.nio.file.Path.of(privateKeyFile))
-                .collect(Collectors.joining());
-
-        String privateKeyBase64 = privateKeyContents
-                .replace("-----BEGIN PRIVATE KEY-----", "")
-                .replace("-----END PRIVATE KEY-----", "")
-                .replaceAll("\\s", "");
-
-        byte[] keyBytes = Base64.getDecoder().decode(privateKeyBase64);
-        KeyFactory keyFactory = KeyFactory.getInstance("Ed25519");
-        PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(keyBytes);
-        return keyFactory.generatePrivate(keySpec);
     }
 }

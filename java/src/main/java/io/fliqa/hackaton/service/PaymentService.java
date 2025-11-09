@@ -1,5 +1,6 @@
 package io.fliqa.hackaton.service;
 
+import io.fliqa.client.interledger.InterledgerApiClient;
 import io.fliqa.client.interledger.model.WalletAddress;
 import io.fliqa.hackaton.infrastructure.persistence.CashierRepository;
 import io.fliqa.hackaton.infrastructure.persistence.PaymentRepository;
@@ -26,7 +27,7 @@ public class PaymentService {
 
     private final PaymentRepository repository;
     private final CashierRepository cashierRepository;
-    private final InterledgerApiClientFactory factory;
+    private final InterledgerApiClient client;
     private final String returnUrl;
     private final WalletService walletService;
 
@@ -34,13 +35,13 @@ public class PaymentService {
     public PaymentService(
             PaymentRepository repository,
             CashierRepository cashierRepository,
-            InterledgerApiClientFactory factory,
+            InterledgerApiClient client,
             WalletService walletService,
             @ConfigProperty(name = "io.fliqa.interledger.redirect_url") String returnUrl) {
 
         this.repository = repository;
         this.cashierRepository = cashierRepository;
-        this.factory = factory;
+        this.client = client;
         this.walletService = walletService;
         this.returnUrl = returnUrl;
     }
@@ -80,8 +81,6 @@ public class PaymentService {
         var cashier = cashierRepository
                 .findByIdOptional(payment.getCashier())
                 .orElseThrow(BadRequestException::new);
-
-        var client = factory.createClient(new WalletAddress(customer));
 
         try {
             var receiverWallet = client.getWallet(new WalletAddress(cashier.getPaymentPointer()));
