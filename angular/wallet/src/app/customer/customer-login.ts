@@ -2,7 +2,8 @@ import { Component, signal, inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ChangeDetectionStrategy } from '@angular/core';
-import { WalletStorageService } from '../services/wallet-storage.service';
+import { HttpClient } from '@angular/common/http';
+import { WalletStorageService, type WalletInfo } from '../services/wallet-storage.service';
 
 @Component({
   selector: 'app-customer-login',
@@ -13,6 +14,7 @@ import { WalletStorageService } from '../services/wallet-storage.service';
 })
 export class CustomerLoginComponent implements OnInit {
   private readonly router = inject(Router);
+  private readonly http = inject(HttpClient);
   private readonly walletStorage = inject(WalletStorageService);
 
   protected readonly errorMessage = signal<string>('');
@@ -81,16 +83,39 @@ export class CustomerLoginComponent implements OnInit {
       }
     }
 
-    // Save wallet address to storage
-    this.walletStorage.saveWalletAddress(walletServer, walletName);
+    // Construct full wallet address for validation
+    const fullWalletAddress = `${walletServer}/${walletName}`;
 
-    // TODO: Validate wallet address with backend
-    setTimeout(() => {
-      this.isLoading.set(false);
-      this.router.navigate(['/customer/transactions'], {
-        state: { walletServer, walletName }
-      });
-    }, 1000);
+    // Validate wallet address with backend
+    this.http.get<WalletInfo>(`/api/wallet?address=${encodeURIComponent(fullWalletAddress)}`).subscribe({
+      next: (walletInfo) => {
+        this.isLoading.set(false);
+
+        // Store wallet info using service
+        this.walletStorage.saveWalletInfo(walletInfo);
+
+        // Save wallet address to storage
+        this.walletStorage.saveWalletAddress(walletServer, walletName);
+
+        console.log('Wallet validated:', walletInfo);
+
+        // Navigate to transactions
+        void this.router.navigate(['/customer/transactions'], {
+          state: { walletServer, walletName }
+        });
+      },
+      error: (error) => {
+        this.isLoading.set(false);
+        if (error.status === 404) {
+          this.errorMessage.set('Wallet address not found. Please check and try again.');
+        } else if (error.status >= 400 && error.status < 500) {
+          this.errorMessage.set(error.error?.message || 'Invalid wallet address. Please try again.');
+        } else {
+          this.errorMessage.set('Failed to validate wallet address. Please try again.');
+        }
+        console.error('Failed to validate wallet:', error);
+      }
+    });
   }
 
   protected selectRecentAddress(address: {server: string, name: string, fullAddress: string}): void {

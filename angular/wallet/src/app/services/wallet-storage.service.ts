@@ -7,6 +7,15 @@ interface WalletAddressEntry {
   timestamp: number;
 }
 
+export interface WalletInfo {
+  address: string;
+  publicName: string;
+  assetCode: string;
+  assetScale: number;
+  authServer: string;
+  resourceServer: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -77,6 +86,53 @@ export class WalletStorageService {
       localStorage.removeItem(this.STORAGE_KEY);
     } catch (error) {
       console.error('Error clearing wallet addresses from storage:', error);
+    }
+  }
+
+  /**
+   * Save wallet info to storage
+   */
+  saveWalletInfo(walletInfo: WalletInfo): void {
+    try {
+      localStorage.setItem('customerWalletInfo', JSON.stringify(walletInfo));
+    } catch (error) {
+      console.error('Error saving wallet info to storage:', error);
+    }
+  }
+
+  /**
+   * Get wallet info from storage
+   */
+  getWalletInfo(): WalletInfo | null {
+    try {
+      const stored = localStorage.getItem('customerWalletInfo');
+      if (!stored) {
+        return null;
+      }
+      return JSON.parse(stored) as WalletInfo;
+    } catch (error) {
+      console.error('Error reading wallet info from storage:', error);
+      return null;
+    }
+  }
+
+  /**
+   * Clear wallet info from storage
+   */
+  clearWalletInfo(): void {
+    try {
+      localStorage.removeItem('customerWalletInfo');
+    } catch (error) {
+      console.error('Error clearing wallet info from storage:', error);
+    }
+  }
+
+  saveWallet(walletInfo: WalletInfo): void {
+    try {
+      localStorage.setItem('customerWalletInfo', JSON.stringify(walletInfo));
+    }
+    catch (error) {
+      console.error('Error saving wallet info to storage:', error);
     }
   }
 }

@@ -119,6 +119,9 @@ export class CashierLoginComponent implements OnInit {
           localStorage.setItem(this.LAST_EMAIL_KEY, email);
         }
 
+        // add call to get receiver wallet details from
+
+
         void this.router.navigate(['/cashier/transactions'], {
           state: { email: email, name: email.split('@')[0] }
         });
