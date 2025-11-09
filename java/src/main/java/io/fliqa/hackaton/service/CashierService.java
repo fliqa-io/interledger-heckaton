@@ -22,14 +22,17 @@ public class CashierService {
 
     private final CashierRepository repository;
     private final Mailer mailer;
+    private final WalletService walletService;
 
     @Inject
     public CashierService(
             CashierRepository repository,
-            Mailer mailer
+            Mailer mailer,
+            WalletService walletService
     ) {
         this.repository = repository;
         this.mailer = mailer;
+        this.walletService = walletService;
     }
 
     @Transactional
@@ -48,6 +51,9 @@ public class CashierService {
         if (!otp.equals(user.getOtp())) {
             throw new UnauthorizedException("Invalid OTP");
         }
+
+        var walletData = walletService.getWallet(user.getPaymentPointer());
+        user.setWalletData(walletData);
 
         return user;
     }
