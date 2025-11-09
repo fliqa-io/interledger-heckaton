@@ -28,17 +28,20 @@ public class PaymentService {
     private final CashierRepository cashierRepository;
     private final InterledgerApiClientFactory factory;
     private final String returnUrl;
+    private final WalletService walletService;
 
     @Inject
     public PaymentService(
             PaymentRepository repository,
             CashierRepository cashierRepository,
             InterledgerApiClientFactory factory,
+            WalletService walletService,
             @ConfigProperty(name = "io.fliqa.interledger.redirect_url") String returnUrl) {
 
         this.repository = repository;
         this.cashierRepository = cashierRepository;
         this.factory = factory;
+        this.walletService = walletService;
         this.returnUrl = returnUrl;
     }
 
@@ -57,7 +60,16 @@ public class PaymentService {
     }
 
     public Payment getById(@NotNull UUID id) {
-        return repository.findByIdOptional(id).orElseThrow(NotFoundException::new);
+        var result = repository.findByIdOptional(id).orElseThrow(NotFoundException::new);
+        var cashier = cashierRepository
+                .findByIdOptional(result.getCashier())
+                .orElseThrow(NotFoundException::new);
+
+        var walletData = walletService.getWallet(cashier.getPaymentPointer());
+
+        result.setWalletData(walletData);
+
+        return result;
     }
 
     public URI pay(
