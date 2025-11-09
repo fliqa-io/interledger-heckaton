@@ -61,6 +61,10 @@ public class PaymentService {
         payment.setAmount(request.getAmount());
         payment.setCurrency(request.getCurrency());
         payment.setCreated(Instant.now());
+        payment.setOutgoingPayment(null);
+        payment.setSenderWallet(null);
+        payment.setQuote(null);
+        payment.setFinalizedPayment(null);
 
         repository.persist(payment);
 

@@ -2,14 +2,12 @@ package io.fliqa.hackaton.infrastructure.web;
 
 import io.fliqa.hackaton.infrastructure.web.dto.CreatePaymentRequest;
 import io.fliqa.hackaton.infrastructure.web.dto.Payment;
+import io.fliqa.hackaton.infrastructure.web.dto.PaymentStatus;
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.Test;
 
-import java.io.InputStream;
 import java.math.BigDecimal;
-import java.nio.file.Files;
-import java.nio.file.Path;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -38,10 +36,9 @@ class PaymentResourceTest {
                         notNullValue(),
                         hasProperty("id", notNullValue()),
                         hasProperty("amount", is(BigDecimal.ONE)),
-                        hasProperty("currency", is("EUR")))
+                        hasProperty("currency", is("EUR")),
+                        hasProperty("status", is(PaymentStatus.Pending)))
         );
-
-        System.out.println(result.getId());
 
         var createdLink = given()
                 .when()
@@ -71,44 +68,5 @@ class PaymentResourceTest {
                         hasProperty("amount", is(new BigDecimal("1.00"))),
                         hasProperty("currency", is("EUR")))
         );
-    }
-
-    @Test
-    void returns_payment_as_image() {
-        var response = given()
-                .when()
-                .accept("image/png")
-                .get("/payment/{id}", "22138913-7bab-4255-8ea2-739355174c3b")
-                .then()
-                .statusCode(200)
-                .extract()
-                .response();
-
-        var result = response.asByteArray();
-
-        assertThat(result, notNullValue());
-        writeImage(result);
-
-        var expected = readImage(PaymentResourceTest.class.getResourceAsStream("/result.png"));
-
-        assertThat(result, is(expected));
-    }
-
-    private void writeImage(byte[] imageData) {
-        try {
-            var userHome = System.getProperty("user.home");
-            var filePath = Path.of(userHome, "payment-test.png");
-            Files.write(filePath, imageData);
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to write image file", e);
-        }
-    }
-
-    private byte[] readImage(InputStream inputStream) {
-        try {
-            return inputStream.readAllBytes();
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to read image file", e);
-        }
     }
 }

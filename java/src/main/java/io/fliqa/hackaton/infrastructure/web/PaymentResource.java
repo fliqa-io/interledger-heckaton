@@ -26,6 +26,8 @@ public class PaymentResource {
 
     @POST
     @Path("/")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
     public Payment createPayment(@NotNull CreatePaymentRequest request) {
         return paymentService.create(request);
     }
