@@ -1,49 +1,49 @@
 <div class="qr-container">
-  <div class="qr-card">
-    <div class="header">
-      <button type="button" class="back-button" (click)="goBack()">← Back</button>
-      <button type="button" class="logout-button" (click)="logout()">Logout</button>
+    <div class="qr-card">
+        <div class="header">
+            <button type="button" class="back-button" (click)="goBack()">← Back</button>
+            <button type="button" class="logout-button" (click)="logout()">Logout</button>
+        </div>
+
+        <div class="content">
+            <h1>Payment Request</h1>
+
+            <div class="amount-display">
+                <div class="amount">{{ amount() | number:'1.2-2' }}</div>
+                <div class="currency">{{ currency() }}</div>
+            </div>
+
+            <div class="qr-code-container">
+                @if (isLoading()) {
+                    <div class="loading-spinner">Loading QR code...</div>
+                } @else if (errorMessage()) {
+                    <div class="error-message">{{ errorMessage() }}</div>
+                } @else if (qrCodeImageUrl()) {
+                    <img [src]="qrCodeImageUrl()" alt="Payment QR Code" class="qr-code-image">
+                }
+            </div>
+
+            <div class="instructions">
+                <p>Scan this QR code with the customer's wallet app to process the payment</p>
+            </div>
+
+            <div class="payment-info">
+                <div class="info-label">Payment ID</div>
+                <div class="info-value payment-id">{{ paymentId() }}</div>
+
+                @if (paymentUrl()) {
+                    <div class="info-label">Payment URL</div>
+                    <div class="info-value payment-url">
+                        <a [href]="paymentUrl()" target="_blank">{{ paymentUrl() }}</a>
+                    </div>
+                }
+            </div>
+
+            <div class="actions">
+                <button type="button" class="secondary-button" (click)="newTransaction()">
+                    New Transaction
+                </button>
+            </div>
+        </div>
     </div>
-
-    <div class="content">
-      <h1>Payment Request</h1>
-
-      <div class="amount-display">
-        <div class="amount">{{ amount() | number:'1.2-2' }}</div>
-        <div class="currency">EUR</div>
-      </div>
-
-      <div class="qr-code-container">
-        @if (isLoading()) {
-          <div class="loading-spinner">Loading QR code...</div>
-        } @else if (errorMessage()) {
-          <div class="error-message">{{ errorMessage() }}</div>
-        } @else if (qrCodeImageUrl()) {
-          <img [src]="qrCodeImageUrl()" alt="Payment QR Code" class="qr-code-image">
-        }
-      </div>
-
-      <div class="instructions">
-        <p>Scan this QR code with the customer's wallet app to process the payment</p>
-      </div>
-
-      <div class="payment-info">
-        <div class="info-label">Payment ID</div>
-        <div class="info-value payment-id">{{ paymentId() }}</div>
-
-        @if (paymentUrl()) {
-          <div class="info-label">Payment URL</div>
-          <div class="info-value payment-url">
-            <a [href]="paymentUrl()" target="_blank">{{ paymentUrl() }}</a>
-          </div>
-        }
-      </div>
-
-      <div class="actions">
-        <button type="button" class="secondary-button" (click)="newTransaction()">
-          New Transaction
-        </button>
-      </div>
-    </div>
-  </div>
 </div>

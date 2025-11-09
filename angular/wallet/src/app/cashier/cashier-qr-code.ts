@@ -19,6 +19,7 @@ export class CashierQRCodeComponent implements OnInit {
   private readonly sanitizer = inject(DomSanitizer);
 
   protected readonly amount = signal<string>('0.00');
+  protected readonly currency = signal<string>('EUR');
   protected readonly paymentId = signal<string>('');
   protected readonly qrCodeImageUrl = signal<SafeUrl | null>(null);
   protected readonly paymentUrl = signal<string>('');
@@ -43,6 +44,7 @@ export class CashierQRCodeComponent implements OnInit {
       try {
         const payment = JSON.parse(paymentJson);
         this.amount.set(payment.amount.toString());
+        this.currency.set(payment.currency.toString());
       } catch (e) {
         console.error('Failed to parse payment from localStorage', e);
       }
