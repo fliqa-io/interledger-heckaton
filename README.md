@@ -51,7 +51,7 @@ npm start
 # The frontend will start on http://localhost:4200
 ```
 
-See detailed instruction on: [/angular/README.md](/angular/README.md)
+See detailed instruction on: [/angular/wallet/README.md](/angular/wallet/README.md)
 
 ### Configuration
 
