@@ -1,13 +1,9 @@
 package io.fliqa.hackaton.service;
 
+import io.fliqa.client.interledger.InterledgerApiClient;
 import io.fliqa.client.interledger.InterledgerApiClientImpl;
 import io.fliqa.client.interledger.model.WalletAddress;
-import io.fliqa.hackaton.infrastructure.web.dto.WalletData;
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
-import jakarta.ws.rs.InternalServerErrorException;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
@@ -20,40 +16,28 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @ApplicationScoped
-public class WalletService {
+public class InterledgerApiClientFactory {
 
-    private final InterledgerApiClientFactory factory;
+    private final PrivateKey privateKey;
+    private final String keyId;
 
-    @Inject
-    public WalletService(
-            InterledgerApiClientFactory factory
+    public InterledgerApiClientFactory(
+            @ConfigProperty(name = "io.fliqa.interledger.private_key_file")
+            String privateKeyFile,
+            @ConfigProperty(name = "io.fliqa.interledger.key_id")
+            String keyId
     ) {
-        this.factory = factory;
+        try {
+            this.privateKey = privateKeyFromFile(privateKeyFile);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to parse private key", e);
+        }
+
+        this.keyId = keyId;
     }
 
-    public WalletData getWallet(@NotNull @NotEmpty String address) {
-        var walletAddress = new WalletAddress(address);
-
-        var client = factory.createClient(walletAddress);
-
-        try {
-            log.info("Retrieving wallet data for address {}", address);
-
-            var result = client.getWallet(walletAddress);
-            return new WalletData(
-                    result.address,
-                    result.publicName,
-                    result.assetCode,
-                    result.assetScale,
-                    result.authServer,
-                    result.resourceServer);
-        } catch (Exception e) {
-            log.error("Failed to retrieve wallet data for address {}", address, e);
-
-            throw new InternalServerErrorException(
-                    "Failed to retrieve wallet data for address " + address,
-                    e);
-        }
+    public InterledgerApiClient createClient(WalletAddress walletAddress) {
+        return new InterledgerApiClientImpl(walletAddress, privateKey, keyId);
     }
 
     private PrivateKey privateKeyFromFile(String privateKeyFile) throws Exception {

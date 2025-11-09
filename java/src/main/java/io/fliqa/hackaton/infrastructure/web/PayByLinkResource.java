@@ -3,8 +3,11 @@ package io.fliqa.hackaton.infrastructure.web;
 import io.fliqa.hackaton.service.PaymentService;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.*;
 
+import java.net.URI;
 import java.util.UUID;
 
 @ApplicationScoped
@@ -20,10 +23,10 @@ public class PayByLinkResource {
 
     @POST
     @Path("/{id}")
-    public String makePayment(@PathParam("id") UUID id)
-    {
-        service.pay(id);
+    public URI makePayment(
+            @PathParam("id") @NotNull UUID id,
+            @QueryParam("customer") @NotNull @NotEmpty String customer) {
 
-        return "Pay by link for " + id;
+        return service.pay(id, customer);
     }
 }
