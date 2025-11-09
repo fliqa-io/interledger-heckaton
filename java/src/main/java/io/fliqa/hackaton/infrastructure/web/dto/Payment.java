@@ -40,4 +40,20 @@ public class Payment implements Serializable {
 
     @Transient
     WalletData walletData;
+
+    @JsonIgnore
+    @Column(name = "outgoing_payment")
+    String outgoingPayment;
+
+    @JsonIgnore
+    @Column(name = "sender_wallet")
+    String senderWallet;
+
+    @JsonIgnore
+    @Column(name = "quote")
+    String quote;
+
+    @JsonIgnore
+    @Column(name = "finalized_payment")
+    String finalizedPayment;
 }
