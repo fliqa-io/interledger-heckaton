@@ -14,7 +14,7 @@
         <div class="amount-label">Amount to Pay</div>
         <div class="amount-display">
           <span class="amount">{{ amount() }}</span>
-          <span class="currency">EUR</span>
+          <span class="currency">{{ currency() }}</span>
         </div>
       </div>
 
@@ -39,9 +39,21 @@
             <span class="wallet-name">{{ walletName() }}</span>
           </div>
         </div>
+
+          <div class="wallet-info">
+              <div class="wallet-label">To Wallet</div>
+              <div class="wallet-field">
+                  <span class="field-label">Server:</span>
+                  <span class="wallet-server">{{ walletServer() }}</span>
+              </div>
+              <div class="wallet-field">
+                  <span class="field-label">Address:</span>
+                  <span class="wallet-name">{{ walletName() }}</span>
+              </div>
+          </div>
       }
 
-      <div class="payment-details">
+      <!--<div class="payment-details">
         <div class="detail-row">
           <span class="detail-label">Payment Method</span>
           <span class="detail-value">Interledger</span>
@@ -52,9 +64,9 @@
         </div>
         <div class="detail-row total">
           <span class="detail-label">Total</span>
-          <span class="detail-value">{{ amount() }} EUR</span>
+          <span class="detail-value">{{ amount() }} {{currency()}}</span>
         </div>
-      </div>
+      </div>-->
 
       @if (isProcessing()) {
         <div class="processing-message">
