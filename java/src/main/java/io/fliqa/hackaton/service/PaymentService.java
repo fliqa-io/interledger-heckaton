@@ -1,6 +1,10 @@
 package io.fliqa.hackaton.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.fliqa.client.interledger.InterledgerApiClient;
+import io.fliqa.client.interledger.model.OutgoingPayment;
+import io.fliqa.client.interledger.model.PaymentPointer;
+import io.fliqa.client.interledger.model.Quote;
 import io.fliqa.client.interledger.model.WalletAddress;
 import io.fliqa.hackaton.infrastructure.persistence.CashierRepository;
 import io.fliqa.hackaton.infrastructure.persistence.PaymentRepository;
@@ -30,6 +34,7 @@ public class PaymentService {
     private final InterledgerApiClient client;
     private final String returnUrl;
     private final WalletService walletService;
+    private final ObjectMapper objectMapper;
 
     @Inject
     public PaymentService(
@@ -37,6 +42,7 @@ public class PaymentService {
             CashierRepository cashierRepository,
             InterledgerApiClient client,
             WalletService walletService,
+            ObjectMapper objectMapper,
             @ConfigProperty(name = "io.fliqa.interledger.redirect_url") String returnUrl) {
 
         this.repository = repository;
@@ -44,6 +50,7 @@ public class PaymentService {
         this.client = client;
         this.walletService = walletService;
         this.returnUrl = returnUrl;
+        this.objectMapper = objectMapper;
     }
 
     @Transactional
@@ -78,6 +85,7 @@ public class PaymentService {
         return result;
     }
 
+    @Transactional
     public URI pay(
             UUID paymentId,
             @NotNull @NotEmpty String customer) {
@@ -98,10 +106,39 @@ public class PaymentService {
 
             var continueInteract = client.continueGrant(
                     senderWallet, quote, createReturnUrl(payment), "nonce");
+
+            payment.setOutgoingPayment(objectMapper.writeValueAsString(continueInteract));
+            payment.setSenderWallet(objectMapper.writeValueAsString(senderWallet));
+            payment.setQuote(objectMapper.writeValueAsString(quote));
+
             return continueInteract.interact.redirect;
         } catch (Exception e) {
             log.error("Failed to create payment", e);
             throw new InternalServerErrorException("Failed to create payment", e);
+        }
+    }
+
+    @Transactional
+    public Payment finalizePayment(
+            @NotNull UUID id, @NotNull @NotEmpty String interactRef) {
+        try {
+            var payment = getById(id);
+            var outgoingPayment = objectMapper.readValue(
+                    payment.getOutgoingPayment(), OutgoingPayment.class);
+            var senderWallet = objectMapper.readValue(
+                    payment.getSenderWallet(), PaymentPointer.class);
+            var quote = objectMapper.readValue(
+                    payment.getQuote(), Quote.class);
+
+            var finalized = client.finalizeGrant(outgoingPayment, interactRef);
+            var finalizedPayment = client.finalizePayment(finalized, senderWallet, quote);
+
+            payment.setFinalizedPayment(objectMapper.writeValueAsString(finalizedPayment));
+
+            return payment;
+        } catch (Exception e) {
+            log.error("Failed to finalize payment", e);
+            throw new InternalServerErrorException("Failed to finalize payment", e);
         }
     }
 

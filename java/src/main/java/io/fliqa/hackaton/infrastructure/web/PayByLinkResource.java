@@ -1,5 +1,6 @@
 package io.fliqa.hackaton.infrastructure.web;
 
+import io.fliqa.hackaton.infrastructure.web.dto.Payment;
 import io.fliqa.hackaton.service.PaymentService;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -30,5 +31,15 @@ public class PayByLinkResource {
             @QueryParam("customer") @NotNull @NotEmpty String customer) {
 
         return service.pay(id, customer);
+    }
+
+    @POST
+    @Path("/{id}/finalize")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Payment finalizePayment(
+            @PathParam("id") @NotNull UUID id,
+            @QueryParam("interact_ref") @NotNull @NotEmpty String interactRef) {
+
+        return service.finalizePayment(id, interactRef);
     }
 }

@@ -4,7 +4,6 @@ import io.fliqa.hackaton.infrastructure.web.dto.CreatePaymentRequest;
 import io.fliqa.hackaton.infrastructure.web.dto.Payment;
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.http.ContentType;
-import io.restassured.response.Response;
 import org.junit.jupiter.api.Test;
 
 import java.io.InputStream;
@@ -40,7 +39,7 @@ class PaymentResourceTest {
                         hasProperty("id", notNullValue()),
                         hasProperty("amount", is(BigDecimal.ONE)),
                         hasProperty("currency", is("EUR")))
-                );
+        );
 
         System.out.println(result.getId());
 
@@ -89,7 +88,7 @@ class PaymentResourceTest {
 
         assertThat(result, notNullValue());
         writeImage(result);
-        
+
         var expected = readImage(PaymentResourceTest.class.getResourceAsStream("/result.png"));
 
         assertThat(result, is(expected));
