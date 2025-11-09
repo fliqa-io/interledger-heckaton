@@ -1,6 +1,7 @@
 package io.fliqa.hackaton.infrastructure.web.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
@@ -57,7 +58,7 @@ public class Payment implements Serializable {
     @Column(name = "finalized_payment", length = 2048)
     String finalizedPayment;
 
-    @JsonIgnore
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     public PaymentStatus getStatus() {
         if (finalizedPayment != null) {
             return PaymentStatus.Success;
