@@ -20,7 +20,7 @@
                 <p class="message">Your payment has been processed successfully</p>
 
                 <div class="amount-display">
-                    <span class="amount">{{ amount() }}</span>
+                    <span class="amount">{{ amount() | number:'1.2-2' }}</span>
                     <span class="currency">{{ currency() }}</span>
                 </div>
 

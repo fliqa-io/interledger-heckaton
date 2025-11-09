@@ -54,7 +54,7 @@ public class Payment implements Serializable {
     @Column(name = "quote", length = 2048)
     String quote;
 
-    @JsonIgnore
+    //@JsonIgnore
     @Column(name = "finalized_payment", length = 2048)
     String finalizedPayment;
 

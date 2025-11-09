@@ -43,7 +43,7 @@
                     <div class="transaction-date">{{ transaction.date | date:'MMM d, y, HH:mm' }}</div>
                   </div>
                   <div class="transaction-amount-status">
-                    <div class="transaction-amount">${{ transaction.amount }}</div>
+                    <div class="transaction-amount">{{ transaction.amount | number:'1.2-2'  }} EUR </div>
                     <div class="transaction-status" [class]="getStatusClass(transaction.status)">
                       {{ transaction.status }}
                     </div>
